@@ -12,7 +12,7 @@ function Form({setOpen}: any) {
         <form className='w-3/5 bg-white h-1/2'>
             <input type="text"  />
         </form>
-        
+        aaaaaaaaaaaaaaaaa
     </div>
    </>
   )
