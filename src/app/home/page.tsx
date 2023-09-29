@@ -1,43 +1,45 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-
-import axios from "axios";
-
 import Form from "../components/Form";
+import axios from "axios";
 
 function Home() {
   const { data: session, status } = useSession();
   const [isOpen, setOpen] = useState(false);
-
   const controller = new AbortController();
-  const signal = controller.signal;
 
   const handleOpen = () => {
     setOpen(true);
   };
 
   useEffect(() => {
-    const addUser = async () => {
-      if (status === "authenticated") {
-        const response = await axios.post("/api/user/add", {
-          email: session?.user?.email ?? null,
-          name: session?.user?.name ?? null,
-          signal,
-        });
+    const fetchData = async () => {
+      if (
+        status === "authenticated" &&
+        session?.user?.email &&
+        session?.user?.name
+      ) {
+        try {
+          const userResponse = await axios.post("/api/user/add", {
+            email: session.user.email,
+            name: session.user.name,
+          });
 
-        const data = response.data;
-        console.log(data);
+          const data = userResponse.data;
+
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
 
-    addUser();
-
-    return () => controller.abort();
-  }, [status, session, controller]);
+    fetchData();
+  }, [status, session]);
 
   return (
-    <main className="w-full">
+    <div className="w-full">
       <div className="w-full px-8 py-3 flex items-center justify-between">
         <p className="text-2xl">
           {status === "loading" ? `Loading...` : `Hello,${session?.user?.name}`}
@@ -50,9 +52,28 @@ function Home() {
         </button>
       </div>
       <button onClick={handleOpen}>Add Feedback</button>
-
-      {isOpen && <Form isOpen={isOpen} setOpen={setOpen} />}
-    </main>
+      {isOpen ? <Form isOpen={isOpen} setOpen={setOpen}/>: null}
+    <div className="flex flex-wrap">
+      <div>
+        sadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsa
+        </div>
+        <div>
+        sadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsa
+        </div>
+        <div>
+        sadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsa
+        </div>
+        <div>
+        sadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsa
+        </div>
+        <div>
+        sadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsa
+        </div>
+        <div>
+        sadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsasadasdasdasdasdsa
+        </div>
+      </div>
+    </div>
   );
 }
 

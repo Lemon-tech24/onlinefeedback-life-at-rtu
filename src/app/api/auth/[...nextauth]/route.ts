@@ -8,7 +8,7 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_SECRET ?? "",
       authorization: {
         params: {
-          scopes: ["profile", "email", "openid"],
+          scopes: ["profile", "email"],
           prompt: "consent",
           access_type: "offline",
         },
