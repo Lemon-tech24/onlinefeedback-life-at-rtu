@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useRef, useState } from "react";
 import { EditPost } from "@/types";
+import axios from "axios";
 
 const FormEdit = ({
   id,
@@ -74,6 +75,19 @@ const FormEdit = ({
 
   const FormSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      const response = await axios.post("/api/post/edit", {
+        id: id,
+        image: imageBase64,
+        title: ntitle,
+        content: ncontent,
+        isChecked: npostAs,
+        concern: nconcern,
+      });
+    } catch (err) {
+      console.log("Updating Failed", err);
+    }
   };
 
   return (
@@ -101,10 +115,7 @@ const FormEdit = ({
             />
           </div>
 
-          <select
-            defaultValue={concern}
-            onChange={(e) => setConcern(e.target.value)}
-          >
+          <select>
             <option value="">Please Select</option>
             <option value="facility">Facility</option>
             <option value="student">Student</option>
