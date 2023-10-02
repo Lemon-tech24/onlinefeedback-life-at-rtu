@@ -70,8 +70,10 @@ function Home() {
   const { data, error, isLoading, isValidating } = useSWR(
     "/api/post/data",
     fetcher,
+
     {
       refreshInterval: 1800,
+      loadingTimeout: 2000,
     }
   );
 
