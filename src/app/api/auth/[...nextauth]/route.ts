@@ -15,6 +15,7 @@ const handler = NextAuth({
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     maxAge: 60 * 60 * 24,
   },
