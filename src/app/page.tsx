@@ -11,6 +11,8 @@ export default function Home() {
     try {
       if (status === "authenticated") {
         router.push("/home");
+      } else {
+        router.push("/");
       }
     } catch (error) {
       console.error("Error in useEffect:", error);

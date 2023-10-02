@@ -7,11 +7,8 @@ const res = NextResponse;
 export async function POST(request: NextRequest) {
   const { email, title, content, isChecked, image, concern } =
     await request.json();
-  let validateImg = null;
+
   try {
-    if (image !== null) {
-      validateImg = image;
-    }
     const user = await prisma.user.findUnique({
       where: {
         email: email,
@@ -26,7 +23,7 @@ export async function POST(request: NextRequest) {
           isChecked: isChecked,
           title: title,
           userId: await user.id,
-          image: validateImg,
+          image: image,
         },
       });
     }
