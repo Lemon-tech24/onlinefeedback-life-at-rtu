@@ -72,22 +72,30 @@ const FormEdit = ({
       inputFileRef.current.click();
     }
   };
+  const [isFormChanged, setFormChanged] = useState(false);
+
+  const handleInputChange = () => {
+    setFormChanged(true);
+  };
 
   const FormSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post("/api/post/edit", {
-        id: id,
-        image: imageBase64,
-        title: ntitle,
-        content: ncontent,
-        isChecked: npostAs,
-        concern: nconcern,
-      });
-    } catch (err) {
-      console.log("Updating Failed", err);
-    }
+    if (id)
+      try {
+        const response = await axios.post("/api/post/edit", {
+          id: id,
+          image: imageBase64,
+          title: ntitle,
+          content: ncontent,
+          isChecked: npostAs,
+          concern: nconcern,
+        });
+        setFormChanged(false);
+        const data = response.data;
+        console.log(data);
+      } catch (err) {
+        console.log("Updating Failed", err);
+      }
   };
 
   return (
@@ -97,13 +105,19 @@ const FormEdit = ({
           <h1>Edit Mode</h1>
           <input
             type="text"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              handleInputChange();
+            }}
             defaultValue={title}
             required
           />
           <textarea
             defaultValue={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              setContent(e.target.value);
+              handleInputChange();
+            }}
             required
           ></textarea>
           <div>
@@ -111,7 +125,10 @@ const FormEdit = ({
             <input
               type="checkbox"
               defaultChecked={isChecked}
-              onChange={(e) => setPostAs(e.target.checked)}
+              onChange={(e) => {
+                setPostAs(e.target.checked);
+                handleInputChange();
+              }}
             />
           </div>
 
@@ -125,7 +142,10 @@ const FormEdit = ({
           <input
             type="file"
             accept="image/*"
-            onChange={handleImageChange}
+            onChange={(e) => {
+              handleImageChange(e);
+              handleInputChange();
+            }}
             ref={inputFileRef}
             className="hidden"
           />
@@ -136,7 +156,14 @@ const FormEdit = ({
 
           {currentImg && (
             <div className="relative">
-              <button type="button" onClick={RemovePhoto} className="absolute">
+              <button
+                type="button"
+                onClick={(e) => {
+                  RemovePhoto();
+                  handleInputChange();
+                }}
+                className="absolute"
+              >
                 X
               </button>
               <img
@@ -147,7 +174,17 @@ const FormEdit = ({
             </div>
           )}
 
-          <button type="submit">UPDATE POST</button>
+          <button
+            type="submit"
+            className=""
+            style={{
+              cursor: !isFormChanged ? "not-allowed" : "default",
+              opacity: !isFormChanged ? 0.7 : 1,
+            }}
+            disabled={!isFormChanged}
+          >
+            UPDATE POST
+          </button>
         </form>
       </div>
     </>
