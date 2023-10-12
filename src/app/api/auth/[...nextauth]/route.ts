@@ -1,3 +1,4 @@
+import { getToken } from "next-auth/jwt";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -8,7 +9,7 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_SECRET ?? "",
       authorization: {
         params: {
-          scopes: ["profile", "email"],
+          scopes: ["profile"],
           prompt: "consent",
           access_type: "offline",
         },

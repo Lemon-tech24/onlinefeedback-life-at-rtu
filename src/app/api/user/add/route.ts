@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { prisma } from "@/prismaConifg"; // Assuming you have correctly imported your Prisma instance
+import { prisma } from "@/app/prismaConfig";
 const res = NextResponse;
 
 export async function POST(request: NextRequest) {
   try {
     const { email, name } = await request.json();
 
-    // Check if the email already exists in the User model
     const existingUser = await prisma.user.findUnique({
       where: {
         email: email,
@@ -15,14 +14,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!existingUser) {
-      // If the email doesn't exist, create a new user
       await prisma.user.create({
         data: {
-          name: name,
           email: email,
+          name: name,
         },
       });
-      return res.json({ added: true, email, name });
+      return res.json({ success: true });
     } else {
       return res.json({
         added: false,
@@ -30,7 +28,7 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (err) {
-    console.error(err); // Log the error for debugging purposes
-    return res.json({ added: false });
+    console.error(err);
+    return res.json({ success: false });
   }
 }

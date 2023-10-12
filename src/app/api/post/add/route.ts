@@ -1,39 +1,38 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { prisma } from "@/prismaConifg";
-
-const res = NextResponse;
+import { NextRequest } from "next/server";
+import { prisma } from "@/app/prismaConfig";
 
 export async function POST(request: NextRequest) {
-  const { email, title, content, isChecked, image, concern } =
-    await request.json();
+  const { formData } = await request.json();
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email,
-      },
-    });
-
-    if (user) {
-      await prisma.post.create({
-        data: {
-          content: content,
-          concern: concern,
-          isChecked: isChecked,
-          title: title,
-          userId: await user.id,
-          image: image,
+  if (formData.title && formData.content && formData.concern) {
+    try {
+      const user = await prisma.user.findFirst({
+        where: {
+          email: formData.email,
         },
       });
-    }
 
-    return res.json({
-      success: true,
-      message: "Successfully Posted",
-    });
-  } catch (err) {
-    console.error(err);
-    return res.json({ success: false, message: "Failed To Post" });
+      if (user) {
+        await prisma.post.create({
+          data: {
+            content: formData.content,
+            concern: formData.concern,
+            isChecked: formData.isChecked,
+            title: formData.title,
+            userId: user.id,
+            image: formData.image,
+          },
+        });
+        return NextResponse.json({ success: true });
+      } else {
+        return NextResponse.json({ success: false, error: "User not found" });
+      }
+    } catch (err) {
+      console.error(err);
+      return NextResponse.json({ success: false, error: "An error occurred" });
+    }
+  } else {
+    return NextResponse.json({ success: false, error: "Missing data" });
   }
 }

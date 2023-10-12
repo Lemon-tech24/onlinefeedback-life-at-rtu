@@ -1,31 +1,43 @@
 "use client";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const { data: session, status } = useSession({
+    required: false,
+    onUnauthenticated() {
+      return;
+    },
+  });
 
   useEffect(() => {
-    try {
-      if (status === "authenticated") {
-        router.push("/home");
-      } else {
-        router.push("/");
+    const checkSession = async () => {
+      if (status === "loading") {
+        return;
       }
-    } catch (error) {
-      console.error("Error in useEffect:", error);
-    }
-  }, [status]);
+
+      if (session?.user) {
+        router.push("/home");
+      }
+    };
+
+    checkSession();
+  }, [session, status, router]);
 
   return (
-    <main className="flex w-full h-screen flex-col items-center justify-center p-4">
-      <div className="w-full h-full flex items-center justify-center m-auto animate-fadeAway">
-        <button onClick={() => signIn("google", { callbackUrl: "/home" })}>
-          Login with RTU ACCOUNT
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      {status === "loading" ? (
+        <div>Loading...</div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => signIn("google", { callbackUrl: "/home" })}
+        >
+          Login With RTU
         </button>
-      </div>
+      )}
     </main>
   );
 }
