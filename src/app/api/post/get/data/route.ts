@@ -15,17 +15,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const encodedPosts = await posts.map((post) => {
-      const encodedName = btoa(btoa(post.user.name));
-      return {
-        ...post,
-        user: {
-          ...post.user,
-          name: encodedName,
-        },
-      };
-    });
-    return NextResponse.json({ success: true, posts: encodedPosts });
+    if (posts) {
+      const encodedPosts = posts.map((post) => {
+        if (post.user) {
+          const encodedName = btoa(btoa(post.user.name));
+          return {
+            ...post,
+            user: {
+              ...post.user,
+              name: encodedName,
+            },
+          };
+        } else {
+          return post;
+        }
+      });
+      return NextResponse.json({ success: true, posts: encodedPosts });
+    }
   } catch (err) {
     console.error(err);
     return NextResponse.json({ success: false });

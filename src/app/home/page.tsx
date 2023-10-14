@@ -10,12 +10,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import DisplayForms from "../components/DisplayForms";
 
 function Page() {
-  //has more
-  const [hasMore, setHasMore] = useState<boolean>(true);
-
-  //get posts
-  const [posts, setPosts] = useState<Array<string>>([]);
-
   //Form Open state
   const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -33,6 +27,9 @@ function Page() {
   //current id of who login
   const [currentUserId, setCurrentUser] = useState<string>("");
 
+  function capitalize(str: string) {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
   //checking the user
   useEffect(() => {
     (async () => {
@@ -42,9 +39,16 @@ function Page() {
 
       try {
         if (status === "authenticated") {
+          const sessionName = session?.user?.name;
+
+          const capitlizeName =
+            typeof sessionName === "string"
+              ? capitalize(sessionName.toLowerCase())
+              : undefined;
+
           const response = await axios.post("/api/user/add", {
             email: session?.user?.email,
-            name: session?.user?.name,
+            name: capitlizeName,
           });
 
           const AddUser = await response.data;
@@ -83,10 +87,9 @@ function Page() {
   //Edit MOde
 
   return (
-    <div>
+    <div className="flex flex-col">
       <Navigation
         name={session?.user?.name ?? ""}
-        currentUser={currentUserId}
         setOpen={() => setOpen(true)}
       />
 
@@ -98,10 +101,12 @@ function Page() {
         />
       )}
 
-      <DisplayForms
-        currentUserId={currentUserId}
-        onCancel={() => setOpen(false)}
-      />
+      {session && (
+        <DisplayForms
+          currentUserId={currentUserId}
+          onCancel={() => setOpen(false)}
+        />
+      )}
     </div>
   );
 }

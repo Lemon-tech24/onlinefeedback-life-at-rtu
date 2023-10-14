@@ -2,14 +2,24 @@ import { FormProps, DataForm } from "@/app/types";
 import axios from "axios";
 import React, { ChangeEvent, useState, useRef } from "react";
 import { FaUserSecret } from "react-icons/fa6";
+import { BsPatchCheck } from "react-icons/bs";
 import { BiImageAdd } from "react-icons/bi";
 
 const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
-  //success
-  const [success, setSuccess] = useState<boolean | null>(null);
+  //handle closing animation
+  const [closeForm, setCloseForm] = useState<boolean>(false);
 
   //notif
   const [notif, setNotif] = useState<string>("");
+
+  //agreement for anonymous post
+  const [openAgreement, setAgreement] = useState<boolean>(false);
+
+  //form overlay
+  const [overlay, setOverlay] = useState<boolean>(false);
+
+  //submit button ref
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   //checkbox ref
   const checkboxRef = useRef<HTMLInputElement | null>(null);
@@ -43,6 +53,11 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
 
   const handleCheckBox = () => {
     if (checkboxRef.current) {
+      if (checkboxRef.current.checked === true) {
+        setAgreement(false);
+      } else {
+        setAgreement(true);
+      }
       checkboxRef.current.checked = !checkboxRef.current.checked;
       const checked = checkboxRef.current.checked;
       setFormData((prevData) => ({
@@ -117,6 +132,10 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+    setOverlay(true);
+
+    btnRef.current && (btnRef.current.textContent = "Please Wait");
+    btnRef.current && btnRef.current.setAttribute("disabled", "true");
 
     if (mode === "add") {
       const response = await axios.post("/api/post/add", {
@@ -126,17 +145,18 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
       const data = response.data;
 
       if (data.success) {
-        setSuccess(true);
         setNotif("Successfully Posted");
 
+        btnRef.current && btnRef.current.setAttribute("disabled", "false");
+        setOverlay(false);
         setTimeout(() => {
           setNotif("");
           onCancel();
         }, 1200);
       } else {
-        setSuccess(false);
         setNotif("Failed To Post");
-
+        btnRef.current && btnRef.current.setAttribute("disabled", "false");
+        setOverlay(false);
         setTimeout(() => {
           setNotif("");
         }, 1200);
@@ -147,6 +167,25 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
       const response = await axios.post("/api/post/edit", {
         formData: formData,
       });
+      const data = response.data;
+
+      if (data.success) {
+        setNotif("SuccessFully Updated");
+
+        btnRef.current && btnRef.current.setAttribute("disabled", "false");
+        setOverlay(false);
+        setTimeout(() => {
+          setNotif("");
+          onCancel();
+        }, 1200);
+      } else {
+        setNotif("Failed to Update");
+        btnRef.current && btnRef.current.setAttribute("disabled", "false");
+        setOverlay(false);
+        setTimeout(() => {
+          setNotif("");
+        }, 1200);
+      }
     }
 
     setFormData(initialData);
@@ -154,94 +193,217 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   };
 
   return (
-    <div className="w-1/2 h-screen flex items-center justify-center fixed top-0 right-0 z-40 bg-slate-500">
+    <div
+      className={`w-5/12 h-screen flex items-center justify-start flex-col fixed top-0 right-0 z-40 bg-slate-500 p-0 ${
+        closeForm ? "animate-sidebarReverse" : "animate-sidebar"
+      }`}
+    >
+      {/* LOADING OVERLAY */}
+      {overlay && (
+        <div className="absolute top-0 right-0 z-50 bg-slate-300/90 h-full w-full flex items-center justify-center">
+          {mode === "add" ? "Adding Post" : "Updating Post"}
+        </div>
+      )}
+
+      {/* ANONYMOUS AGREEMENT */}
+      {openAgreement && (
+        <div
+          className={`absolute top-0 left-0 w-full h-full z-50 bg-slate-500/80 flex items-center justify-center ${
+            openAgreement ? "animate-fadeIn" : "animate-fadeOut"
+          }`}
+        >
+          <div className="flex flex-col items-center gap-5 bg-white w-10/12 rounded-xl p-4">
+            <p className="text-xl font-bold">Anonymous Post</p>
+            <p className="text-lg">
+              Anonymous posts published in the website do not include your name
+            </p>
+            <div className="flex items-center gap-4 flex-col">
+              {/* First paragraph */}
+              <div className="flex items-center justify-start gap-5 w-10/12 full m-auto">
+                <div className="text-3xl">
+                  <FaUserSecret />
+                </div>
+                <p className="text-justify">
+                  Admins of the Life@RTU can see your name for satefy purposes.
+                </p>
+              </div>
+
+              {/* SEcond paragraph */}
+              <div className="flex items-center justify-start gap-5 w-10/12 m-auto">
+                <div className="text-3xl">
+                  <BsPatchCheck />
+                </div>
+                <p className="text-justify">
+                  Admins and moderators may reach out to you personally once
+                  your feedback is highly alarming of someone's privacy or
+                  safety.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="rounded-xl p-1 text-lg text-white bg-blue-800"
+              onClick={() => setAgreement(false)}
+            >
+              Agree
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* NOTIFICATION  */}
       {notif && <p>{notif}</p>}
       <div>
         {imgError && <p>{imgError}</p>}
-        <div>
-          <button type="button" onClick={() => onCancel()}>
-            Cancel
-          </button>
-        </div>
 
         {/*------------------------------------------------------*/}
 
-        <form onSubmit={handleSubmit}>
-          {/*TITLE */}
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            placeholder="title"
-            onChange={handleChange}
-            maxLength={100}
-            required
-          />
-          {/*CONTENT*/}
-          <textarea
-            placeholder="Let your voice be heard."
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            maxLength={500}
-            required
-          />
-
-          {/*CONCERN*/}
-          <select
-            onChange={handleChange}
-            value={formData.concern}
-            name="concern"
-            required
+        {!closeForm && (
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col w-full items-center justify-center gap-2 animate-fadeIn h-80"
           >
-            <option value="">Please Select</option>
-            <option value="facility">Facility</option>
-            <option value="student">Student</option>
-            <option value="professor">Professor</option>
-            <option value="etc">ETC</option>
-          </select>
+            <div className="w-full flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setCloseForm(true);
+                  setTimeout(() => {
+                    onCancel();
+                  }, 400);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
 
-          {/* POST AS ANONYMOUS */}
-          <input
-            type="checkbox"
-            name="isChecked"
-            ref={checkboxRef}
-            className="hidden"
-            defaultChecked={formData.isChecked}
-          />
-          <button
-            type="button"
-            onClick={handleCheckBox}
-            style={{ color: checkboxRef.current?.checked ? "black" : "white" }}
-          >
-            <FaUserSecret />
-          </button>
-          {/*IMAGE */}
-
-          <div>
+            {/*TITLE */}
             <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleImageChange}
-              ref={inputFileRef}
-              className="hidden"
+              type="text"
+              name="title"
+              className="outline-none text-5xl w-full bg-transparent font-bold placeholder-black"
+              value={formData.title}
+              placeholder="Untitled"
+              onChange={handleChange}
+              maxLength={100}
+              required
             />
 
-            <button type="button" onClick={() => inputFileRef.current?.click()}>
-              <BiImageAdd />
-            </button>
-            {formData.image && (
-              <button type="button" onClick={RemovePhoto}>
-                X
-              </button>
-            )}
-          </div>
+            {/*CONCERN*/}
+            <div className="w-full flex items-center justify-start gap-5">
+              <p className="text-4xl">FOCUS:</p>
+              <select
+                onChange={handleChange}
+                value={formData.concern}
+                className="w-1/2 text-2xl outline-none rounded-xl p-2 bg-transparent text-center"
+                name="concern"
+                required
+              >
+                <option value="">Please Select</option>
+                <option value="facility">Facility</option>
+                <option value="student">Student</option>
+                <option value="professor">Professor</option>
+                <option value="others">Others</option>
+              </select>
+            </div>
 
-          <button type="submit">
-            {mode === "edit" ? "Save Post" : "Add Post"}
-          </button>
-        </form>
+            {/*CONTENT*/}
+            <div className="w-full flex items-center justify-center flex-col">
+              <textarea
+                placeholder="Let your voice be heard."
+                name="content"
+                className="resize-none w-full h-96 outline-none rounded-t-xl text-xl text-justify p-4"
+                value={formData.content}
+                onChange={handleChange}
+                maxLength={500}
+                required
+              />
+              <div className="bg-white rounded-b-xl w-full flex items-center justify-between pb-2 px-3">
+                <div
+                  className={`w-1/3 ${
+                    formData.image ? "animate-fadeIn" : "animate-fadeOut"
+                  }`}
+                >
+                  {formData.image && "with Photo"}
+                </div>
+                <div className="w-1/3 flex justify-center">
+                  {formData.content.length} / 500
+                </div>
+                <div className="w-1/3"></div>
+              </div>
+            </div>
+
+            {/* MAIN PARENT */}
+            <div className="flex items-center justify-end w-full gap-6">
+              {/* POST AS ANONYMOUS */}
+              <input
+                type="checkbox"
+                name="isChecked"
+                ref={checkboxRef}
+                className="hidden"
+                defaultChecked={formData.isChecked}
+              />
+
+              {/*IMAGE */}
+
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                ref={inputFileRef}
+                className="hidden"
+              />
+
+              {!formData.image && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    inputFileRef.current?.click();
+                  }}
+                  className="text-4xl flex items-center justify-center"
+                >
+                  <BiImageAdd />
+                </button>
+              )}
+
+              {formData.image && (
+                <button
+                  type="button"
+                  className={`bg-red-600 rounded-xl p-1 text-white text-lg ${
+                    formData.image ? "animate-fadeIn" : "animate-fadeOut"
+                  }`}
+                  onClick={RemovePhoto}
+                >
+                  Remove Photo
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleCheckBox}
+                style={{
+                  color: checkboxRef.current?.checked ? "white" : "black",
+                }}
+                className="text-3xl flex items-center justify-center"
+              >
+                {/* White means yes anonymous, Blacks means no anonymous */}
+                <FaUserSecret />
+              </button>
+
+              {/* button */}
+              <button
+                type="submit"
+                ref={btnRef}
+                className="text-lg p-2 bg-blue-800 text-white rounded-xl"
+              >
+                {mode === "edit" ? "Save Post" : "Add Post"}
+              </button>
+            </div>
+            {/* end */}
+          </form>
+        )}
       </div>
     </div>
   );

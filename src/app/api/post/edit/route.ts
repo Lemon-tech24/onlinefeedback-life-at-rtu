@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
             image: formData.image,
           },
         });
+
+        if (updatePost) {
+          return NextResponse.json({ success: true });
+        }
       }
     }
   } catch (err) {

@@ -62,6 +62,10 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     }, 800);
   };
 
+  const capitalize = (str: string) => {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
   return (
     <div className="columns-4 gap-5 mb-4 mx-10">
       {isLoading
@@ -77,23 +81,27 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   className="mb-3 w-full overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer"
                 >
                   {/*Display Contents*/}
+                  {currentUserId === item.userId ? (
+                    <div className="w-full flex items-center justify-end gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setEdit({ ...edit, [item.id]: true })}
+                      >
+                        Edit this Post
+                      </button>
 
-                  <div className="w-full flex items-center justify-end gap-1">
-                    <button
-                      type="button"
-                      onClick={() => setEdit({ ...edit, [item.id]: true })}
-                    >
-                      Edit this Post
-                    </button>
+                      <button
+                        type="button"
+                        ref={deleteRef}
+                        onClick={() => DeletePost(item.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ) : (
+                    ""
+                  )}
 
-                    <button
-                      type="button"
-                      ref={deleteRef}
-                      onClick={() => DeletePost(item.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
                   {/* Header */}
                   <div>
                     <p className="font-bold text-2xl break-words text-justify line-clamp-4 text-ellipsis w-full">
@@ -110,9 +118,11 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         <CgProfile />
                       </div>
                       {item.isChecked
-                        ? "Anonymous"
+                        ? `Anonymous ${
+                            item.userId === currentUserId ? "(me)" : ""
+                          }`
                         : item.user?.name
-                        ? atob(atob(item.user.name))
+                        ? capitalize(atob(atob(item.user.name)))
                         : ""}
                     </div>
 

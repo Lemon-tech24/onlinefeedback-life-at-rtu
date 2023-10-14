@@ -21,7 +21,6 @@ export interface UserData {
 }
 
 export interface NavData {
-  currentUser: string;
   name: string;
   setOpen: () => void;
 }
