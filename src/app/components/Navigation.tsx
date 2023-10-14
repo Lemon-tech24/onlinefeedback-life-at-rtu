@@ -1,10 +1,18 @@
 "use client";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { NavData } from "../types";
 
 function Navigation({ name, setOpen }: NavData) {
-  const { data: session } = useSession({ required: true });
+  const router = useRouter();
+
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/");
+    },
+  });
 
   //open logout overlay
   const [logout, setLogout] = useState<boolean>(false);

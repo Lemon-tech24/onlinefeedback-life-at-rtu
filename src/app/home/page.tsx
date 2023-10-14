@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Navigation from "../components/Navigation";
 import Form from "../components/Form";
-import InfiniteScroll from "react-infinite-scroll-component";
+
 import DisplayForms from "../components/DisplayForms";
 
 function Page() {
