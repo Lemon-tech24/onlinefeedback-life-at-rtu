@@ -4,13 +4,11 @@ import React, { ChangeEvent, useState, useRef } from "react";
 import { FaUserSecret } from "react-icons/fa6";
 import { BsPatchCheck } from "react-icons/bs";
 import { BiImageAdd } from "react-icons/bi";
+import { VscLoading } from "react-icons/vsc";
 
 const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   //handle closing animation
   const [closeForm, setCloseForm] = useState<boolean>(false);
-
-  //notif
-  const [notif, setNotif] = useState<string>("");
 
   //agreement for anonymous post
   const [openAgreement, setAgreement] = useState<boolean>(false);
@@ -27,8 +25,6 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   //form data
   const [formData, setFormData] = useState<DataForm>(initialData);
 
-  //watch event if changes happens in values
-  const [event, setEvent] = useState<boolean>(false);
   //const [currentImg, setImg] = useState<string | null>(formData.image ?? null); for displaying image
 
   //notif for image
@@ -39,11 +35,6 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    if (mode === "edit") {
-      if (e) {
-        setEvent(true);
-      }
-    }
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -64,18 +55,11 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
         ...prevData,
         isChecked: checked,
       }));
-      setEvent(true);
     }
   };
 
   //Images related Here
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (mode === "edit") {
-      if (e) {
-        setEvent(true);
-      }
-    }
-
     const file = e.target.files?.[0];
 
     if (file) {
@@ -103,9 +87,6 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   };
 
   const convertToBase64 = async (file: File) => {
-    if (file) {
-      setEvent(true);
-    }
     return new Promise<string | ArrayBuffer | null>((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
@@ -124,7 +105,6 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
     if (inputFileRef.current) {
       inputFileRef.current.value = "";
     }
-    setEvent(true);
   };
 
   //end of handle Changes
@@ -132,8 +112,14 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+
+    //
+
+    //overlay of update
     setOverlay(true);
 
+    //sliding animation
+    setCloseForm(false);
     btnRef.current && (btnRef.current.textContent = "Please Wait");
     btnRef.current && btnRef.current.setAttribute("disabled", "true");
 
@@ -145,21 +131,19 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
       const data = response.data;
 
       if (data.success) {
-        setNotif("Successfully Posted");
+        btnRef.current && btnRef.current.setAttribute("disabled", "false");
+        setOverlay(false);
 
-        btnRef.current && btnRef.current.setAttribute("disabled", "false");
-        setOverlay(false);
+        setCloseForm(true);
+
         setTimeout(() => {
-          setNotif("");
           onCancel();
-        }, 1200);
+        }, 600);
       } else {
-        setNotif("Failed To Post");
         btnRef.current && btnRef.current.setAttribute("disabled", "false");
         setOverlay(false);
-        setTimeout(() => {
-          setNotif("");
-        }, 1200);
+
+        setCloseForm(true);
       }
     }
 
@@ -170,21 +154,18 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
       const data = response.data;
 
       if (data.success) {
-        setNotif("SuccessFully Updated");
+        btnRef.current && btnRef.current.setAttribute("disabled", "false");
+        setOverlay(false);
 
-        btnRef.current && btnRef.current.setAttribute("disabled", "false");
-        setOverlay(false);
+        setCloseForm(true);
+
         setTimeout(() => {
-          setNotif("");
           onCancel();
-        }, 1200);
+        }, 600);
       } else {
-        setNotif("Failed to Update");
         btnRef.current && btnRef.current.setAttribute("disabled", "false");
         setOverlay(false);
-        setTimeout(() => {
-          setNotif("");
-        }, 1200);
+        setCloseForm(true);
       }
     }
 
@@ -198,10 +179,14 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
         closeForm ? "animate-sidebarReverse" : "animate-sidebar"
       }`}
     >
+      {/* NOTIFICATION  */}
+
       {/* LOADING OVERLAY */}
       {overlay && (
         <div className="absolute top-0 right-0 z-50 bg-slate-300/90 h-full w-full flex items-center justify-center">
-          {mode === "add" ? "Adding Post" : "Updating Post"}
+          <div className="text-7xl text-blue-700 animate-spin">
+            <VscLoading />
+          </div>
         </div>
       )}
 
@@ -252,8 +237,6 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
         </div>
       )}
 
-      {/* NOTIFICATION  */}
-      {notif && <p>{notif}</p>}
       <div>
         {imgError && <p>{imgError}</p>}
 

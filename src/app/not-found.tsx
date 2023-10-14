@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { VscLoading } from "react-icons/vsc";
 
 function NotFound() {
   const [counter, setCounter] = useState(5);
@@ -22,8 +23,13 @@ function NotFound() {
   }, [router]);
 
   return (
-    <div className="w-full h-screen flex items-center justify-center text-2xl">
-      Link doesnt exist. Redirecting in {counter} seconds. Please Wait
+    <div className="w-full h-screen flex flex-col items-center justify-center text-2xl">
+      <div className="text-7xl text-blue-800 animate-spin">
+        <VscLoading />
+      </div>
+      <div>
+        Link doesnt exist. Redirecting in {counter} seconds. Please Wait
+      </div>
     </div>
   );
 }

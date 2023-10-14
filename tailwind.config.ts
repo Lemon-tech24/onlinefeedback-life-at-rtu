@@ -17,8 +17,8 @@ const config: Config = {
       animation: {
         fadeIn: `fadeIn .8s ease`,
         fadeOut: "fadeOut .8s ease",
-        sidebar: "sidebar .8s ease",
-        sidebarReverse: "sidebarReverse .8s ease",
+        sidebar: "sidebar 1s ease",
+        sidebarReverse: "sidebarReverse 1s ease",
       },
 
       keyframes: {

@@ -2,6 +2,7 @@
 import { useSession, signIn } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { VscLoading } from "react-icons/vsc";
 
 export default function Home() {
   const router = useRouter();
@@ -29,7 +30,12 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {status === "loading" ? (
-        <div>Loading...</div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-5xl text-blue-800 animate-spin">
+            <VscLoading />
+          </div>
+          <div>Loading</div>
+        </div>
       ) : (
         <button
           type="button"
