@@ -84,11 +84,9 @@ function Page() {
     image: "",
   };
 
-  //Edit MOde
-
   return (
     <div
-      className="flex flex-col bg-cover"
+      className="flex flex-col bg-cover bg-no-repeat"
       style={{ backgroundImage: "url('/bg.png')" }}
     >
       <Navigation

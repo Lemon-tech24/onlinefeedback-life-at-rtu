@@ -29,7 +29,10 @@ export default function Home() {
   }, [session, status, router]);
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-between">
+    <div
+      className="flex min-h-screen w-full flex-col items-center justify-between bg-cover bg-no-repeat"
+      style={{ backgroundImage: "url('/landingbg.png')" }}
+    >
       {status === "loading" ? (
         <div className="flex flex-col fixed top-0 left-0 w-full h-full items-center justify-center">
           <div className="text-7xl text-blue-800 animate-spin">
@@ -49,7 +52,7 @@ export default function Home() {
               className="text-300 font-extrabold leading-relaxed text-left bg-clip-text text-transparent"
               style={{
                 lineHeight: "250px",
-                backgroundImage: "url('/home.png')",
+                backgroundImage: "url('/textbg.png')",
               }}
             >
               RTU

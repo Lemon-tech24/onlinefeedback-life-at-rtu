@@ -256,6 +256,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
                     onCancel();
                   }, 400);
                 }}
+                className="text-2xl bg-red-600 text-white rounded-2xl px-6"
               >
                 Cancel
               </button>

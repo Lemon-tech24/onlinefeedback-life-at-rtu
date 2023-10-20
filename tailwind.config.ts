@@ -13,6 +13,8 @@ const config: Config = {
         fadeOut: "fadeOut .8s ease",
         sidebar: "sidebar 1s ease",
         sidebarReverse: "sidebarReverse 1s ease",
+        crossx: "crossX .8s ease",
+        crossy: "crossY .8s ease",
       },
       fontSize: {
         "300": "300px",
@@ -37,6 +39,16 @@ const config: Config = {
           "0%": { width: "41.666667%", opacity: "1" },
           "80%": { width: "0", opacity: ".5" },
           "100%": { opacity: "0" },
+        },
+
+        crossX: {
+          "0%": { rotate: "0" },
+          "100%": { rotate: "45deg" },
+        },
+
+        crossY: {
+          "0%": { rotate: "0", height: "0" },
+          "100%": { rotate: "-45deg", height: "5px" },
         },
       },
       height: {

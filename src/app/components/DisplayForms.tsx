@@ -8,26 +8,31 @@ import Form from "./Form";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { VscLoading } from "react-icons/vsc";
+import { IoSettingsOutline } from "react-icons/io5";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
-  //what to delete
+  //open menu 3 dots
+  const [openDots, setOpenDots] = useState<{ [postId: string]: boolean }>({});
+
+  const toggleDotsMenu = (postId: string) => {
+    setOpenDots({ ...openDots, [postId]: !openDots[postId] });
+  };
+
+  //what to see when delete
   const [overlayDelete, setOverlayDelete] = useState<boolean>(false);
 
+  //edit
   const [edit, setEdit] = useState<{ [postId: string]: boolean }>({});
+
   //post to delete
   const [postToDelete, setPostToDelete] = useState<string>("");
 
   //open delete confirmation
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  //open details btn
-  const [details, setDetails] = useState<{ [postId: string]: boolean }>({});
-
   //delete Ref
   const deleteRef = useRef<HTMLButtonElement | null>(null);
-
-  //deleteLoad
-  const [deleteLoad, setDeleteLoad] = useState<boolean>(false);
 
   //routing the page
   const router = useRouter();
@@ -46,7 +51,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   console.log(data);
 
   const DeletePost = async (postId: string) => {
-    setDeleteLoad(true);
     if (deleteRef.current) {
       deleteRef.current.disabled = true;
     }
@@ -72,7 +76,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
     if (deleteRef.current) {
       deleteRef.current.disabled = false;
-      setDeleteLoad(false);
     }
 
     setTimeout(() => {
@@ -81,13 +84,17 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     }, 1000);
   };
 
-  const capitalize = (str: string) => {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  const capitalize = (text: string) => {
+    return text.replace(
+      /(^\w|\s\w)(\S*)/g,
+      (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase()
+    );
   };
 
   console.log("delete this post", postToDelete);
+
   return (
-    <div className="columns-4 gap-5 mb-4 mx-10">
+    <div className="columns-4 gap-5 mb-4 mx-10 z-10">
       {deleteNotif && (
         <div
           className={
@@ -119,7 +126,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
             return (
               <React.Fragment key={key}>
                 <div
-                  className={`mb-3 z-20 w-full h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer`}
+                  className={`mb-3 w-full h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer`}
                 >
                   {/* when deleting show this */}
                   {overlayDelete && postToDelete === item.id ? (
@@ -133,7 +140,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   )}
                   {/* Overlay of Delete */}
                   {openDelete && (
-                    <div className="bg-slate-500/10 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
+                    <div className="bg-slate-500/10 z-50 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
                       <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6">
                         <div className="text-xl font-bold flex w-full items-center justify-center">
                           Are you sure you want to delete the Post?
@@ -161,28 +168,51 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   )}
 
                   {/*Display Contents*/}
-                  {currentUserId === item.userId && (
-                    <div className="w-full flex items-center justify-end gap-1">
-                      <button
-                        type="button"
-                        onClick={() => setEdit({ ...edit, [item.id]: true })}
-                      >
-                        Edit this Post
-                      </button>
 
-                      <button
-                        type="button"
-                        ref={deleteRef}
-                        onClick={() => {
-                          setPostToDelete(item.id);
-                          setOpenDelete(true);
-                          setOverlayDelete(true);
-                        }}
-                      >
-                        Delete
-                      </button>
+                  <div
+                    className="flex w-full items-center justify-end gap-1 duration-700"
+                    onClick={() => toggleDotsMenu(item.id)}
+                  >
+                    {/* shows when clicked settings clicked */}
+                    {openDots[item.id] && currentUserId === item.userId ? (
+                      <div className="w-full flex right-0 items-center justify-end gap-1 animate-fadeIn">
+                        <button
+                          type="button"
+                          onClick={() => setEdit({ ...edit, [item.id]: true })}
+                        >
+                          Edit this Post
+                        </button>
+
+                        <button
+                          type="button"
+                          ref={deleteRef}
+                          onClick={() => {
+                            setPostToDelete(item.id);
+                            setOpenDelete(true);
+                            setOverlayDelete(true);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : openDots[item.id] && currentUserId !== item.userId ? (
+                      <button>Report</button>
+                    ) : (
+                      ""
+                    )}
+                    {/* buttons 3dots*/}
+                    <div className="flex items-center justify-center">
+                      {openDots[item.id] ? (
+                        <div className="text-2xl animate-fadeIn">
+                          <AiOutlineCloseCircle />
+                        </div>
+                      ) : (
+                        <div className="text-2xl animate-fadeIn">
+                          <IoSettingsOutline />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
 
                   {/* Header */}
                   <div>
