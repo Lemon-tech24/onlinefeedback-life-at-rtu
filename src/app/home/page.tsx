@@ -87,7 +87,10 @@ function Page() {
   //Edit MOde
 
   return (
-    <div className="flex flex-col">
+    <div
+      className="flex flex-col bg-cover"
+      style={{ backgroundImage: "url('/bg.png')" }}
+    >
       <Navigation
         name={session?.user?.name ?? ""}
         setOpen={() => setOpen(true)}

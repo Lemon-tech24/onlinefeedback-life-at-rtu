@@ -8,19 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
-
       animation: {
         fadeIn: `fadeIn .8s ease`,
         fadeOut: "fadeOut .8s ease",
         sidebar: "sidebar 1s ease",
         sidebarReverse: "sidebarReverse 1s ease",
       },
-
+      fontSize: {
+        "300": "300px",
+        "60": "60px",
+      },
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0" },

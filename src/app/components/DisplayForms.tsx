@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import { VscLoading } from "react-icons/vsc";
 
 function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
+  //what to delete
+  const [overlayDelete, setOverlayDelete] = useState<boolean>(false);
+
   const [edit, setEdit] = useState<{ [postId: string]: boolean }>({});
   //post to delete
   const [postToDelete, setPostToDelete] = useState<string>("");
@@ -32,6 +35,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //delete notif
   const [deleteNotif, setDeleteNotif] = useState<string>("");
 
+  //delete success indicator failed or success
+  const [deleteFailed, setDeleteFailed] = useState<boolean>(false);
+
   const fetcher = (url: string) => axios.post(url).then((res) => res.data);
   const { data, error, isLoading } = useSWR("/api/post/get/data", fetcher, {
     refreshInterval: 1100,
@@ -48,10 +54,16 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     try {
       console.log("delete clicked ");
       const response = await axios.post("/api/post/delete", { postId: postId });
-      const data = response.data;
+      const data = await response.data;
 
       if (data.success) {
         setDeleteNotif("Successfully Deleted");
+        setDeleteFailed(false);
+        setOverlayDelete(false);
+      } else if (data.success === false) {
+        setDeleteNotif("Failed To Delete");
+        setDeleteFailed(true);
+        setOverlayDelete(false);
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -77,8 +89,18 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   return (
     <div className="columns-4 gap-5 mb-4 mx-10">
       {deleteNotif && (
-        <div className="z-50 fixed top-0 left-0 w-full flex items-center justify-center">
-          {deleteNotif}
+        <div
+          className={
+            "z-50 fixed top-0 left-0 w-full h-full flex items-center justify-center"
+          }
+        >
+          <div
+            className={`${
+              deleteFailed ? "bg-red-700" : "bg-green-700"
+            } text-white`}
+          >
+            {deleteNotif}
+          </div>
         </div>
       )}
       {isLoading ? (
@@ -97,10 +119,21 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
             return (
               <React.Fragment key={key}>
                 <div
-                  className={`mb-3 z-20 w-full overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer`}
+                  className={`mb-3 z-20 w-full h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer`}
                 >
+                  {/* when deleting show this */}
+                  {overlayDelete && postToDelete === item.id ? (
+                    <div className="absolute w-full h-full top-0 left-0 bg-slate-500/50 flex items-center justify-center">
+                      <div className="text-7xl text-blue-800 animate-spin">
+                        <VscLoading />
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {/* Overlay of Delete */}
                   {openDelete && (
-                    <div className="bg-slate-500/10 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn">
+                    <div className="bg-slate-500/10 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
                       <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6">
                         <div className="text-xl font-bold flex w-full items-center justify-center">
                           Are you sure you want to delete the Post?
@@ -109,13 +142,16 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         <div className="flex w-full items-center justify-center gap-5">
                           <button
                             onClick={() => DeletePost(postToDelete)}
-                            className="bg-green-700 text-white p-1 rounded-lg text-lg w-20"
+                            className="bg-green-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl"
                           >
                             Yes
                           </button>
                           <button
-                            onClick={() => setOpenDelete(false)}
-                            className="bg-red-700 text-white p-1 rounded-lg text-lg w-20"
+                            onClick={() => {
+                              setOpenDelete(false);
+                              setOverlayDelete(false);
+                            }}
+                            className="bg-red-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl"
                           >
                             No
                           </button>
@@ -140,6 +176,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         onClick={() => {
                           setPostToDelete(item.id);
                           setOpenDelete(true);
+                          setOverlayDelete(true);
                         }}
                       >
                         Delete
@@ -152,7 +189,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     <p className="font-bold text-2xl break-words text-justify line-clamp-4 text-ellipsis w-full">
                       {item.title}
                     </p>
-                    <p>Focus: {item.concern}</p>
+                    <p>Focus: {capitalize(item.concern)}</p>
                   </div>
 
                   {/* Content */}
