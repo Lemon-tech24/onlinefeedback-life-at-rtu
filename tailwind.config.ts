@@ -36,7 +36,8 @@ const config: Config = {
       },
       fontSize: {
         "300": "300px",
-        "60": "60px",
+        "250": "250px",
+        "200": "200px",
       },
       keyframes: {
         fadeIn: {

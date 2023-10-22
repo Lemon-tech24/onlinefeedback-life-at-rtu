@@ -41,15 +41,15 @@ export default function Home() {
           <div className="text-3xl">Loading</div>
         </div>
       ) : (
-        <div className="w-full h-screen flex items-center justify-between">
+        <div className="w-full h-screen flex items-center justify-between 2xl:flex-wrap 2xl:flex-col 2xl:justify-center 2xl:gap-5">
           <div className="flex items-center w-full flex-col">
             <div className="flex flex-col items-center w-full">
-              <p className="text-60 bg-white text-yellow-400 ml-3 w-56 rounded-3xl text-center italic">
+              <p className="text-60 bg-white text-yellow-400 ml-3 w-56 rounded-3xl text-center italic sm:text-5xl">
                 LIFE @
               </p>
             </div>
             <p
-              className="text-300 font-extrabold leading-relaxed text-left bg-clip-text text-transparent"
+              className="text-300 font-extrabold leading-relaxed text-left bg-clip-text text-transparent md:text-100 sm:text-200"
               style={{
                 lineHeight: "250px",
                 backgroundImage: "url('/textbg.png')",
@@ -59,12 +59,12 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-col items-center gap-4 w-full">
-            <div className="tagline text-7xl">
+            <div className="tagline text-7xl md:text-5xl sm:text-4xl">
               Your <div className="voice text-slate-600 shadow-none">VOICE</div>
               matters
             </div>
 
-            <div className="text-2xl italic w-full text-center text-slate-700">
+            <div className="text-2xl italic w-full text-center text-slate-700 md:text-xl sm:text-base break-words">
               We make it easier to share your thoughts about the campus
             </div>
             <button
