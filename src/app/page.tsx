@@ -30,7 +30,7 @@ export default function Home() {
 
   return (
     <div
-      className="flex min-h-screen w-full flex-col items-center justify-between bg-cover bg-no-repeat"
+      className="flex min-h-screen w-full flex-col items-center justify-between bg-cover bg-no-repeat overflow-hidden"
       style={{ backgroundImage: "url('/landingbg.png')" }}
     >
       {status === "loading" ? (
@@ -41,15 +41,15 @@ export default function Home() {
           <div className="text-3xl">Loading</div>
         </div>
       ) : (
-        <div className="w-full h-screen flex items-center justify-between 2xl:flex-wrap 2xl:flex-col 2xl:justify-center 2xl:gap-5">
+        <div className="w-full h-screen flex items-center justify-between 2xl:flex-wrap 2xl:flex-col 2xl:justify-center 2xl:gap-5 overflow-hidden">
           <div className="flex items-center w-full flex-col">
             <div className="flex flex-col items-center w-full">
-              <p className="text-60 bg-white text-yellow-400 ml-3 w-56 rounded-3xl text-center italic sm:text-5xl">
+              <p className="text-60 bg-white text-yellow-400 ml-3 w-56 rounded-3xl text-center italic sm:text-5xl xs:text-3xl">
                 LIFE @
               </p>
             </div>
             <p
-              className="text-300 font-extrabold leading-relaxed text-left bg-clip-text text-transparent md:text-100 sm:text-200"
+              className="text-300 font-extrabold leading-relaxed  text-center bg-clip-text text-transparent md:text-100 sm:text-200 xs:text-150"
               style={{
                 lineHeight: "250px",
                 backgroundImage: "url('/textbg.png')",
@@ -58,19 +58,19 @@ export default function Home() {
               RTU
             </p>
           </div>
-          <div className="flex flex-col items-center gap-4 w-full">
-            <div className="tagline text-7xl md:text-5xl sm:text-4xl">
+          <div className="flex flex-col items-center gap-4 w-full sm:gap-2 xs:gap-1">
+            <div className="tagline text-7xl md:text-5xl sm:text-4xl xs:text-2xl">
               Your <div className="voice text-slate-600 shadow-none">VOICE</div>
               matters
             </div>
 
-            <div className="text-2xl italic w-full text-center text-slate-700 md:text-xl sm:text-base break-words">
+            <div className="text-2xl italic w-full text-center text-slate-700 md:text-xl sm:text-base break-words xs:text-sm xs:p-1">
               We make it easier to share your thoughts about the campus
             </div>
             <button
               type="button"
               onClick={() => signIn("google", { callbackUrl: "/home" })}
-              className="flex items-center justify-center gap-1 text-2xl border-2 border-black rounded-3xl p-2"
+              className="flex items-center justify-center gap-1 text-2xl border-2 border-black rounded-3xl p-2 sm:text-xl xs:text-lg xs:p-1"
             >
               <div className="text-4xl">
                 <FcGoogle />

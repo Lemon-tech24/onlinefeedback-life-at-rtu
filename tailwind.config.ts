@@ -22,6 +22,8 @@ const config: Config = {
 
       sm: { max: "639px" },
       // => @media (max-width: 639px) { ... }
+
+      xs: { max: "480px" },
     },
     extend: {
       animation: {
@@ -38,6 +40,8 @@ const config: Config = {
         "300": "300px",
         "250": "250px",
         "200": "200px",
+        "60": "60px",
+        "150": "150px",
       },
       keyframes: {
         fadeIn: {
