@@ -6,10 +6,10 @@ import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
 import { DataForm, DisplayForm } from "../types";
 import Form from "./Form";
 import useSWR from "swr";
-import { useRouter } from "next/navigation";
 import { VscLoading } from "react-icons/vsc";
 import { IoSettingsOutline } from "react-icons/io5";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import ViewPost from "./ViewPost";
 
 function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //open menu 3 dots
@@ -34,9 +34,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //delete Ref
   const deleteRef = useRef<HTMLButtonElement | null>(null);
 
-  //routing the page
-  const router = useRouter();
-
   //delete notif
   const [deleteNotif, setDeleteNotif] = useState<string>("");
 
@@ -48,7 +45,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     refreshInterval: 1100,
   });
 
-  console.log(data);
+  //open post see whole post/comments etc.
+  const [openDetails, setOpenDetails] = useState<boolean>(false);
+  const [selectedDetails, setSelectedDetails] = useState<string>("");
 
   const DeletePost = async (postId: string) => {
     if (deleteRef.current) {
@@ -92,9 +91,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   };
 
   console.log("delete this post", postToDelete);
-
+  console.log("openDetails: ", openDetails);
   return (
-    <div className="columns-4 gap-5 mb-4 mx-10 z-10">
+    <div className="columns-4 gap-5 mb-4 mx-10 2xl:columns-3 xl:columns-3 lg:columns-3 lg:gap-3 lg:mb-2 lg:mx-5 md:columns-2 md:mx-3 md:mb-2 md:gap-3 sm:columns-1 sm:mb-4">
       {deleteNotif && (
         <div
           className={
@@ -117,6 +116,10 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
           </div>
           <div className="text-2xl ">Loading Data...</div>
         </div>
+      ) : data.posts.length === 0 ? (
+        <div className="fixed top-0 left-0 flex items-center z-50">
+          Empty Posts
+        </div>
       ) : (
         data &&
         data.posts
@@ -126,7 +129,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
             return (
               <React.Fragment key={key}>
                 <div
-                  className={`mb-3 w-full h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer`}
+                  className={`mb-3 h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer lg:p-2 sm:w-full sm:m-auto sm:mb-4`}
                 >
                   {/* when deleting show this */}
                   {overlayDelete && postToDelete === item.id ? (
@@ -141,15 +144,15 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   {/* Overlay of Delete */}
                   {openDelete && (
                     <div className="bg-slate-500/10 z-50 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
-                      <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6">
-                        <div className="text-xl font-bold flex w-full items-center justify-center">
+                      <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6 md:p-2 md:gap-3">
+                        <div className="text-xl font-bold flex w-full items-center justify-center md:font-semibold md:text-lg">
                           Are you sure you want to delete the Post?
                         </div>
 
-                        <div className="flex w-full items-center justify-center gap-5">
+                        <div className="flex w-full items-center justify-center gap-5 md:gap-3">
                           <button
                             onClick={() => DeletePost(postToDelete)}
-                            className="bg-green-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl"
+                            className="bg-green-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
                           >
                             Yes
                           </button>
@@ -158,7 +161,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                               setOpenDelete(false);
                               setOverlayDelete(false);
                             }}
-                            className="bg-red-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl"
+                            className="bg-red-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
                           >
                             No
                           </button>
@@ -168,6 +171,14 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   )}
 
                   {/*Display Contents*/}
+
+                  {/* open  post */}
+                  {openDetails && (
+                    <ViewPost
+                      postId={selectedDetails}
+                      setOpenDetails={setOpenDetails}
+                    />
+                  )}
 
                   <div
                     className="flex w-full items-center justify-end gap-1 duration-700"
@@ -201,13 +212,13 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                       ""
                     )}
                     {/* buttons 3dots*/}
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center bg-blue-600 rounded-full p-1">
                       {openDots[item.id] ? (
-                        <div className="text-2xl animate-fadeIn">
+                        <div className="text-2xl text-white animate-fadeIn">
                           <AiOutlineCloseCircle />
                         </div>
                       ) : (
-                        <div className="text-2xl animate-fadeIn">
+                        <div className="text-2xl text-white animate-fadeIn">
                           <IoSettingsOutline />
                         </div>
                       )}
@@ -216,14 +227,20 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
                   {/* Header */}
                   <div>
-                    <p className="font-bold text-2xl break-words text-justify line-clamp-4 text-ellipsis w-full">
+                    <p className="font-bold text-2xl break-words text-justify line-clamp-4 text-ellipsis w-full 2xl:text-3xl xl:text-3xl">
                       {item.title}
                     </p>
                     <p>Focus: {capitalize(item.concern)}</p>
                   </div>
 
                   {/* Content */}
-                  <div className="bg-slate-100 rounded-xl p-5 flex items-center flex-col gap-5">
+                  <div
+                    className="bg-slate-100 rounded-xl p-5 flex items-center flex-col gap-5 sm:p-2 sm:w-full"
+                    onClick={() => {
+                      setOpenDetails(true);
+                      setSelectedDetails(item.id);
+                    }}
+                  >
                     {/* Who Post it */}
                     <div className="flex items-center justify-start text-xl gap-1 w-full">
                       <div className="text-5xl">
@@ -238,7 +255,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         : ""}
                     </div>
 
-                    <div className="break-words text-justify line-clamp-4 text-ellipsis w-full">
+                    <div className="break-words text-justify line-clamp-4 text-ellipsis w-full 2xl:text-xl xl:text-xl">
                       {item.content}
                     </div>
                     {item.image && (

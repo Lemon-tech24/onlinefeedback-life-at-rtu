@@ -21,8 +21,14 @@ export async function POST(request: NextRequest) {
       if (deletePost) {
         return NextResponse.json({ success: true });
       }
+
+      return NextResponse.json({ success: false });
+    } else {
+      return NextResponse.json({ success: false });
     }
   } catch (err) {
+    console.error(err);
+
     return NextResponse.json({ success: false });
   }
 }

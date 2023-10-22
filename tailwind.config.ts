@@ -7,14 +7,32 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      "2xl": { max: "1535px" },
+      // => @media (max-width: 1535px) { ... }
+
+      xl: { max: "1279px" },
+      // => @media (max-width: 1279px) { ... }
+
+      lg: { max: "1023px" },
+      // => @media (max-width: 1023px) { ... }
+
+      md: { max: "767px" },
+      // => @media (max-width: 767px) { ... }
+
+      sm: { max: "639px" },
+      // => @media (max-width: 639px) { ... }
+    },
     extend: {
       animation: {
         fadeIn: `fadeIn .8s ease`,
         fadeOut: "fadeOut .8s ease",
         sidebar: "sidebar 1s ease",
         sidebarReverse: "sidebarReverse 1s ease",
-        crossx: "crossX .8s ease",
-        crossy: "crossY .8s ease",
+        sidebarlg: "sidebarlg .8s ease",
+        sidebarReverselg: "sidebarReverselg .8s ease",
+        sidebarfull: "sidebarfull .8s ease",
+        sidebarReversefull: "sidebarReversefull .8s ease",
       },
       fontSize: {
         "300": "300px",
@@ -41,14 +59,24 @@ const config: Config = {
           "100%": { opacity: "0" },
         },
 
-        crossX: {
-          "0%": { rotate: "0" },
-          "100%": { rotate: "45deg" },
+        sidebarlg: {
+          "0%": { width: "0" },
+          "100%": { width: "66.666667%" },
+        },
+        sidebarReverselg: {
+          "0%": { width: "66.666667%", opacity: "1" },
+          "80%": { width: "0", opacity: ".5" },
+          "100%": { opacity: "0" },
         },
 
-        crossY: {
-          "0%": { rotate: "0", height: "0" },
-          "100%": { rotate: "-45deg", height: "5px" },
+        sidebarfull: {
+          "0%": { width: "0" },
+          "100%": { width: "100%" },
+        },
+        sidebarReversefull: {
+          "0%": { width: "100%", opacity: "1" },
+          "80%": { width: "0", opacity: ".5" },
+          "100%": { opacity: "0" },
         },
       },
       height: {

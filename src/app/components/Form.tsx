@@ -175,8 +175,10 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
 
   return (
     <div
-      className={`w-5/12 h-screen flex items-center justify-start flex-col fixed top-0 right-0 z-40 bg-slate-500 p-0 ${
-        closeForm ? "animate-sidebarReverse" : "animate-sidebar"
+      className={`w-5/12 h-screen flex items-center justify-start flex-col fixed top-0 right-0 z-40 bg-slate-500 p-4 xl:p-4 lg:w-4/6 lg:p-4 md:w-4/6 sm:w-full ${
+        closeForm
+          ? "animate-sidebarReverse lg:animate-sidebarReverselg md:animate-sidebarReverselg sm:animate-sidebarReversefull"
+          : "animate-sidebar lg:animate-sidebarlg md:animate-sidebarlg sm:animate-sidebarfull"
       }`}
     >
       {/* NOTIFICATION  */}
@@ -197,28 +199,28 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
             openAgreement ? "animate-fadeIn" : "animate-fadeOut"
           }`}
         >
-          <div className="flex flex-col items-center gap-5 bg-white w-10/12 rounded-xl p-4">
+          <div className="flex flex-col items-center gap-5 bg-white w-10/12 rounded-xl p-4 md:p-2 sm:w-11/12">
             <p className="text-xl font-bold">Anonymous Post</p>
-            <p className="text-lg">
+            <p className="text-lg md:text-base text-center sm:text-sm">
               Anonymous posts published in the website do not include your name
             </p>
             <div className="flex items-center gap-4 flex-col">
               {/* First paragraph */}
-              <div className="flex items-center justify-start gap-5 w-10/12 full m-auto">
-                <div className="text-3xl">
+              <div className="flex items-center justify-start gap-5 w-10/12 full m-auto md:w-full md:gap-3">
+                <div className="text-3xl sm:text-2xl">
                   <FaUserSecret />
                 </div>
-                <p className="text-justify">
+                <p className="text-justify sm:text-sm">
                   Admins of the Life@RTU can see your name for satefy purposes.
                 </p>
               </div>
 
               {/* SEcond paragraph */}
-              <div className="flex items-center justify-start gap-5 w-10/12 m-auto">
-                <div className="text-3xl">
+              <div className="flex items-center justify-start gap-5 w-10/12 m-auto md:w-full md:gap-3">
+                <div className="text-3xl sm:text-2xl">
                   <BsPatchCheck />
                 </div>
-                <p className="text-justify">
+                <p className="text-justify sm:text-sm">
                   Admins and moderators may reach out to you personally once
                   your feedback is highly alarming of someone's privacy or
                   safety.
@@ -237,7 +239,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
         </div>
       )}
 
-      <div>
+      <div className="w-full">
         {imgError && <p>{imgError}</p>}
 
         {/*------------------------------------------------------*/}
@@ -256,7 +258,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
                     onCancel();
                   }, 400);
                 }}
-                className="text-2xl bg-red-600 text-white rounded-2xl px-6"
+                className="text-2xl bg-red-600 text-white rounded-2xl px-6 lg:text-xl md:text-lg"
               >
                 Cancel
               </button>
@@ -266,7 +268,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
             <input
               type="text"
               name="title"
-              className="outline-none text-5xl w-full bg-transparent font-bold placeholder-black"
+              className="outline-none text-5xl w-full bg-transparent font-bold placeholder-black lg:text-4xl md:text-3xl"
               value={formData.title}
               placeholder="Untitled"
               onChange={handleChange}
@@ -276,11 +278,11 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
 
             {/*CONCERN*/}
             <div className="w-full flex items-center justify-start gap-5">
-              <p className="text-4xl">FOCUS:</p>
+              <p className="text-4xl lg:text-3xl md:text-2xl">FOCUS:</p>
               <select
                 onChange={handleChange}
                 value={formData.concern}
-                className="w-1/2 text-2xl outline-none rounded-xl p-2 bg-transparent text-center"
+                className="w-1/2 text-2xl outline-none rounded-xl p-2 bg-transparent text-center md:text-xl"
                 name="concern"
                 required
               >
