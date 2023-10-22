@@ -42,7 +42,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
   const fetcher = (url: string) => axios.post(url).then((res) => res.data);
   const { data, error, isLoading } = useSWR("/api/post/get/data", fetcher, {
-    refreshInterval: 1100,
+    refreshInterval: 900,
   });
 
   //open post see whole post/comments etc.
@@ -172,14 +172,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
                   {/*Display Contents*/}
 
-                  {/* open  post */}
-                  {openDetails && (
-                    <ViewPost
-                      postId={selectedDetails}
-                      setOpenDetails={setOpenDetails}
-                    />
-                  )}
-
                   <div
                     className="flex w-full items-center justify-end gap-1 duration-700"
                     onClick={() => toggleDotsMenu(item.id)}
@@ -301,6 +293,25 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     />
                   )}
                 </div>
+                {/* open  post */}
+                {openDetails && selectedDetails === item.id && (
+                  <ViewPost
+                    formData={{
+                      id: item.id,
+                      title: item.title,
+                      userId: item.user?.id ?? "",
+                      content: item.content,
+                      isChecked: item.isChecked,
+                      concern: item.concern,
+                      image: item.image,
+                      user: {
+                        id: item.user?.id ?? "",
+                        name: item.user?.name ?? "",
+                      },
+                    }}
+                    setOpenDetails={setOpenDetails}
+                  />
+                )}
               </React.Fragment>
             );
           })

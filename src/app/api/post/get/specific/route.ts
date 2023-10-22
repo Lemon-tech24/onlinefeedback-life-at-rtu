@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (post) {
-        return NextResponse.json({ success: true, post });
+        return NextResponse.json({ post });
       } else {
         return NextResponse.json({ success: false });
       }

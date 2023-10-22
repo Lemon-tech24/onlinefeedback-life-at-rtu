@@ -31,11 +31,11 @@ export interface DisplayForm {
 }
 
 export interface ViewPost {
-  postId: string;
+  formData: DataForm;
   setOpenDetails: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface ViewData{
+export interface ViewData {
   id: string;
   title: string;
   userId: string;
