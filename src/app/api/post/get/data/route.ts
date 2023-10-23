@@ -12,6 +12,9 @@ export async function POST(request: NextRequest) {
             name: true,
           },
         },
+        comments: true,
+
+        likes: true,
       },
     });
 
@@ -25,6 +28,9 @@ export async function POST(request: NextRequest) {
               ...post.user,
               name: encodedName,
             },
+            comments: post.comments.length,
+
+            countlikes: post.likes.length,
           };
         } else {
           return post;

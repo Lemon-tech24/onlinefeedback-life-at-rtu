@@ -7,6 +7,15 @@ export interface DataForm {
   concern: string;
   image?: string | null;
   user?: UserData;
+  comments?: number;
+  likes?: {
+    some: any;
+    forEach: any;
+    id: string;
+    postId: string;
+    userId: string;
+  };
+  countlikes?: number;
 }
 
 export interface FormProps {
@@ -31,8 +40,11 @@ export interface DisplayForm {
 }
 
 export interface ViewPost {
+  currentUserId: string;
   formData: DataForm;
+  commentClicked: boolean;
   setOpenDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  setCommentClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ViewData {
@@ -43,4 +55,12 @@ export interface ViewData {
   isChecked: boolean;
   concern: string;
   image?: string | null;
+}
+
+export interface CommentData {
+  id: string;
+  content: string;
+  postId: string;
+  user: { id: string; name: string };
+  userId: string;
 }

@@ -40,6 +40,10 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //delete success indicator failed or success
   const [deleteFailed, setDeleteFailed] = useState<boolean>(false);
 
+  //when comment clicked auto focus
+  const [Clicked, setClicked] = useState<boolean>(false);
+
+  //fetcher for the post data
   const fetcher = (url: string) => axios.post(url).then((res) => res.data);
   const { data, error, isLoading } = useSWR("/api/post/get/data", fetcher, {
     refreshInterval: 900,
@@ -80,9 +84,30 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     setTimeout(() => {
       setOpenDelete(false);
       setDeleteNotif("");
-    }, 1000);
+    }, 1200);
   };
 
+  //handle reactions
+  //already react state
+  const [alreadyReact, setAlreadyReact] = useState<boolean>(false);
+
+  const Reaction = async (postId: string) => {
+    console.log("To React : ", postId);
+    try {
+      const response = await axios.post("/api/post/add/react", {
+        postId: postId,
+        userId: currentUserId,
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+        console.log("users that like this post", data.likes);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const capitalize = (text: string) => {
     return text.replace(
       /(^\w|\s\w)(\S*)/g,
@@ -90,25 +115,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     );
   };
 
-  console.log("delete this post", postToDelete);
-  console.log("openDetails: ", openDetails);
+  console.log("To be display", data);
   return (
     <div className="columns-4 gap-5 mb-4 mx-10 2xl:columns-3 xl:columns-3 lg:columns-3 lg:gap-3 lg:mb-2 lg:mx-5 md:columns-2 md:mx-3 md:mb-2 md:gap-3 sm:columns-1 sm:mb-4">
-      {deleteNotif && (
-        <div
-          className={
-            "z-50 fixed top-0 left-0 w-full h-full flex items-center justify-center"
-          }
-        >
-          <div
-            className={`${
-              deleteFailed ? "bg-red-700" : "bg-green-700"
-            } text-white`}
-          >
-            {deleteNotif}
-          </div>
-        </div>
-      )}
       {isLoading ? (
         <div className="fixed top-0 left-0 w-full h-full z-50 flex flex-col items-center justify-center gap-3">
           <div className="text-5xl text-blue-800 animate-spin">
@@ -142,9 +151,21 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     ""
                   )}
                   {/* Overlay of Delete */}
+
                   {openDelete && (
                     <div className="bg-slate-500/10 z-50 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
                       <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6 md:p-2 md:gap-3">
+                        {deleteNotif && (
+                          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-slate-500/40">
+                            <div
+                              className={`${
+                                deleteFailed ? "bg-red-700" : "bg-green-700"
+                              } text-white rounded-2xl text-5xl`}
+                            >
+                              {deleteNotif}
+                            </div>
+                          </div>
+                        )}
                         <div className="text-xl font-bold flex w-full items-center justify-center md:font-semibold md:text-lg">
                           Are you sure you want to delete the Post?
                         </div>
@@ -219,7 +240,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
                   {/* Header */}
                   <div>
-                    <p className="font-bold text-2xl break-words text-justify line-clamp-4 text-ellipsis w-full 2xl:text-3xl xl:text-3xl">
+                    <p className="font-bold text-2xl break-words text-justify line-clamp-2 text-ellipsis w-full 2xl:text-3xl xl:text-3xl">
                       {item.title}
                     </p>
                     <p>Focus: {capitalize(item.concern)}</p>
@@ -227,7 +248,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
                   {/* Content */}
                   <div
-                    className="bg-slate-100 rounded-xl p-5 flex items-center flex-col gap-5 sm:p-2 sm:w-full"
+                    className="bg-slate-100 rounded-tl-xl rounded-tr-xl p-5 flex items-center flex-col gap-5 sm:p-2 sm:w-full"
                     onClick={() => {
                       setOpenDetails(true);
                       setSelectedDetails(item.id);
@@ -258,18 +279,46 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         className="contain w-full rounded-2xl"
                       />
                     )}
-                    <div className="w-full flex items-center justify-center gap-16">
-                      <div className="text-2xl">
-                        <BsHeartFill fill={"red"} />
-                      </div>
+                  </div>
+                  <div className="w-full flex items-center justify-center gap-16 py-2 bg-slate-100 rounded-bl-xl rounded-br-xl">
+                    <div
+                      className="text-2xl flex items-center gap-1"
+                      onClick={() => Reaction(item.id)}
+                    >
+                      <BsHeartFill
+                        fill={
+                          item.likes &&
+                          item.likes.some(
+                            (element: DataForm) =>
+                              element.userId === currentUserId
+                          )
+                            ? "red"
+                            : "black"
+                        }
+                      />
+                      <p className="text-base flex items-center">
+                        {item.countlikes}
+                      </p>
+                    </div>
 
-                      <div className="text-3xl">
-                        <HiOutlineChatBubbleOvalLeftEllipsis />
-                      </div>
+                    <div
+                      className="text-3xl flex items-center"
+                      onClick={() => {
+                        setClicked(true);
+                        setOpenDetails(true);
+                        setSelectedDetails(item.id);
+                      }}
+                    >
+                      <HiOutlineChatBubbleOvalLeftEllipsis />
+                      <p className="text-base">
+                        {item.comments && item.comments >= 1000
+                          ? (item.comments / 1000).toFixed(1) + "k"
+                          : item.comments}
+                      </p>
+                    </div>
 
-                      <div className="text-2xl">
-                        <BsPeopleFill />
-                      </div>
+                    <div className="text-2xl">
+                      <BsPeopleFill />
                     </div>
                   </div>
 
@@ -309,6 +358,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         name: item.user?.name ?? "",
                       },
                     }}
+                    commentClicked={Clicked}
+                    currentUserId={currentUserId}
+                    setCommentClicked={setClicked}
                     setOpenDetails={setOpenDetails}
                   />
                 )}

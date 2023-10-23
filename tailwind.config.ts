@@ -43,6 +43,11 @@ const config: Config = {
         "60": "60px",
         "150": "150px",
       },
+
+      maxHeight: {
+        "80": "80vh",
+      },
+
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0" },
@@ -84,8 +89,15 @@ const config: Config = {
           "100%": { opacity: "0" },
         },
       },
+
+      width: {
+        "450": "450px",
+        "600": "600px",
+      },
+
       height: {
         "80": "80vh",
+        "450": "450px",
       },
     },
   },

@@ -33,15 +33,15 @@ model Comment {
   id      String       @id @default(auto()) @map("_id") @db.ObjectId
   content String
   postId  String  @db.ObjectId
-  post    Post     @relation(fields: [postId], references: [id])
+  post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId  String
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Like {
   id      String       @id @default(auto()) @map("_id") @db.ObjectId
   postId  String  @db.ObjectId
-  post    Post     @relation(fields: [postId], references: [id])
+  post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId  String
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
