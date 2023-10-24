@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CgProfile } from "react-icons/cg";
-import { BsHeart, BsHeartFill, BsPeopleFill } from "react-icons/bs";
+import { BsHeartFill, BsPeopleFill } from "react-icons/bs";
 import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
 import { DataForm, DisplayForm } from "../types";
 import Form from "./Form";
@@ -45,9 +45,18 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
   //fetcher for the post data
   const fetcher = (url: string) => axios.post(url).then((res) => res.data);
-  const { data, error, isLoading } = useSWR("/api/post/get/data", fetcher, {
-    refreshInterval: 900,
-  });
+
+  const { data, error, isLoading, mutate } = useSWR(
+    "/api/post/get/data",
+    fetcher,
+    {
+      refreshInterval: 6,
+    }
+  );
+
+  useEffect(() => {
+    mutate("/api/post/get/data");
+  }, []);
 
   //open post see whole post/comments etc.
   const [openDetails, setOpenDetails] = useState<boolean>(false);
@@ -87,10 +96,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     }, 1200);
   };
 
-  //handle reactions
-  //already react state
-  const [alreadyReact, setAlreadyReact] = useState<boolean>(false);
-
   const Reaction = async (postId: string) => {
     console.log("To React : ", postId);
     try {
@@ -100,10 +105,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
       });
 
       const data = response.data;
-
-      if (data.success) {
-        console.log("users that like this post", data.likes);
-      }
     } catch (err) {
       console.error(err);
     }
@@ -160,7 +161,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                             <div
                               className={`${
                                 deleteFailed ? "bg-red-700" : "bg-green-700"
-                              } text-white rounded-2xl text-5xl`}
+                              } text-white rounded-2xl text-2xl text-center`}
                             >
                               {deleteNotif}
                             </div>
@@ -193,10 +194,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
                   {/*Display Contents*/}
 
-                  <div
-                    className="flex w-full items-center justify-end gap-1 duration-700"
-                    onClick={() => toggleDotsMenu(item.id)}
-                  >
+                  <div className="flex w-full items-center justify-end gap-1 duration-700">
                     {/* shows when clicked settings clicked */}
                     {openDots[item.id] && currentUserId === item.userId ? (
                       <div className="w-full flex right-0 items-center justify-end gap-1 animate-fadeIn">
@@ -227,11 +225,17 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     {/* buttons 3dots*/}
                     <div className="flex items-center justify-center bg-blue-600 rounded-full p-1">
                       {openDots[item.id] ? (
-                        <div className="text-2xl text-white animate-fadeIn">
+                        <div
+                          className="text-2xl text-white animate-fadeIn"
+                          onClick={() => toggleDotsMenu(item.id)}
+                        >
                           <AiOutlineCloseCircle />
                         </div>
                       ) : (
-                        <div className="text-2xl text-white animate-fadeIn">
+                        <div
+                          className="text-2xl text-white animate-fadeIn"
+                          onClick={() => toggleDotsMenu(item.id)}
+                        >
                           <IoSettingsOutline />
                         </div>
                       )}

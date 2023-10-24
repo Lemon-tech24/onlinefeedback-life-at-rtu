@@ -86,7 +86,7 @@ function Page() {
 
   return (
     <div
-      className="flex flex-col bg-cover bg-no-repeat sm:bg-fill"
+      className="flex flex-col bg-cover bg-no-repeat sm:bg-fill min-h-screen"
       style={{ backgroundImage: "url('/bg.png')" }}
     >
       <Navigation

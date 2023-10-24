@@ -6,42 +6,54 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id     String   @id @default(uuid()) @map("_id")
-  email  String   @unique
-  name   String   
-  posts  Post[]  
+  id       String    @id @default(uuid()) @map("_id")
+  email    String    @unique
+  name     String
+  posts    Post[]
   comments Comment[]
-  likes   Like[]
+  likes    Like[]
+  Reports   Report[]
 }
 
 model Post {
-  id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   content   String
   concern   String
   image     String?
   isChecked Boolean
-  title   String
+  title     String
   comments  Comment[]
   createdAt DateTime  @default(now())
-  likes     Like[]    
+  likes     Like[]
+  Reports    Report[]
 }
 
 model Comment {
-  id      String       @id @default(auto()) @map("_id") @db.ObjectId
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
   content String
-  postId  String  @db.ObjectId
-  post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId  String @db.ObjectId
+  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId  String
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Like {
-  id      String       @id @default(auto()) @map("_id") @db.ObjectId
-  postId  String  @db.ObjectId
-  post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId  String
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason String
 }

@@ -6,8 +6,9 @@ import { CgProfile } from "react-icons/cg";
 
 interface Data {
   postId: string;
+  shortContent: boolean;
 }
-function Comments({ postId }: Data) {
+function Comments({ postId, shortContent }: Data) {
   const capitalize = (text: string) => {
     return text.replace(
       /(^\w|\s\w)(\S*)/g,
@@ -43,23 +44,30 @@ function Comments({ postId }: Data) {
   return (
     <>
       {data && data.comments.length > 0 ? (
-        <div className="w-full bg-slate-500/30 rounded-lg overflow-y-auto max-h-44 p-3 flex flex-col gap-4">
+        <div
+          className={`w-full bg-slate-500/30 rounded-lg overflow-y-auto max-h-44 2xl:max-h-36 xl:max-h-32 ${
+            shortContent ? "sm:max-h-44" : ""
+          } p-3 flex flex-col gap-4 2xl:gap-2 2xl:p-1`}
+        >
           {data.comments
             .slice(0)
             .reverse()
             .map((item: CommentData, key: string) => {
               return (
-                <div className="bg-slate-200 p-2 w-full rounded-3xl" key={key}>
+                <div
+                  className="bg-slate-200 p-2 w-full rounded-3xl 2xl:rounded-xl xl:p-1"
+                  key={key}
+                >
                   <div className="">
                     <div className="flex items-center justify-start gap-1">
-                      <div className="text-3xl">
+                      <div className="text-3xl sm:text-base">
                         <CgProfile />
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex items-center sm:text-base">
                         {capitalize(item.user?.name)}
                       </div>
                     </div>
-                    <div className="break-words whitespace-break-spaces text-justify w-full px-2">
+                    <div className="break-words whitespace-break-spaces text-justify w-full px-2 sm:text-sm">
                       {item.content}
                     </div>
                   </div>

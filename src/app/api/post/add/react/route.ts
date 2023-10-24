@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
           userId: userId,
         },
       });
+      console.log("Like Removed");
+      return NextResponse.json({ success: true });
     } else {
       const newLike = await prisma.like.create({
         data: {
@@ -27,9 +29,8 @@ export async function POST(request: NextRequest) {
         },
       });
       console.log("New like added.");
+      return NextResponse.json({ success: true });
     }
-
-    return NextResponse.json({ success: true });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ success: false });

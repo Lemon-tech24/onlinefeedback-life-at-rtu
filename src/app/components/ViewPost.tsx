@@ -106,16 +106,22 @@ function ViewPost({
           }
         }
       }
+
+      setTimeout(() => {
+        setCommentError(null);
+      }, 1500);
     } catch (err) {
       console.log(err);
     }
   };
 
   return (
-    <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-slate-500/80 z-50 animate-fadeIn overflow-hidden">
+    <div className="fixed top-0 left-0 flex items-center xl:items-start xl:pt-2 md:p-0 md:pt-5 sm:items-center justify-center w-full h-full bg-slate-500/80 z-50 animate-fadeIn overflow-hidden">
       <div
         className={`bg-white p-4 rounded-2xl ${
-          shortContent ? "w-5/12" : "w-1/2"
+          shortContent
+            ? "w-5/12 2xl:w-8/12 lg:w-10/12 sm:p-1 sm:w-11/12"
+            : "w-1/2 2xl:w-9/12 xl:w-11/12"
         }`}
       >
         {/* Loading */}
@@ -131,7 +137,7 @@ function ViewPost({
         </div>
         {/* Contents */}
         <div className="flex flex-col w-full items-center gap-1">
-          <div className="text-2xl font-semibold break-words w-full text-justify">
+          <div className="text-2xl font-semibold break-words w-full text-justify 2xl:text-3xl xl:text-xl">
             {formData.title}
           </div>
           <div className="flex items-center text-xl gap-2 w-full justify-start">
@@ -143,7 +149,9 @@ function ViewPost({
 
           {/* content */}
           <div
-            className={`w-full bg-slate-500/30 p-4 rounded-2xl flex flex-wrap items-center justify-evenly`}
+            className={`w-full bg-slate-500/30 p-4 rounded-2xl flex flex-wrap xl:flex-nowrap ${
+              shortContent ? "sm:flex-wrap" : ""
+            } items-center justify-evenly lg:gap-2 2xl:p-2`}
           >
             {formData.image && (
               <div className="w-full flex items-center justify-center rounded-xl">
@@ -160,14 +168,14 @@ function ViewPost({
             {/* Clickable image */}
             {openImage && formData.image && (
               <div className="fixed top-0 left-0 flex justify-center flex-col items-center w-full h-full bg-slate-500 z-50 animate-fadeIn">
-                <div className="w-full h-full">
+                <div className="w-full h-full xl:h-80">
                   <button
                     type="button"
                     onClick={() => {
                       setOpenImage(false);
                       setCommentClicked(false);
                     }}
-                    className="bg-red-600 text-white rounded-2xl px-4 text-3xl fixed top-12 right-12"
+                    className="bg-red-600 text-white rounded-2xl px-4 text-3xl fixed top-12 right-12 hover:shadow-xl"
                   >
                     Close
                   </button>
@@ -180,25 +188,29 @@ function ViewPost({
               </div>
             )}
             {/* ----------------------------------------------------- */}
-            <div className="flex items-star flex-col w-full h-full">
+            <div className="flex items-start flex-col w-full h-full">
               {formData.user && !formData.isChecked ? (
                 <div
                   className={`flex items-center gap-1 w-full ${
-                    shortContent ? "text-2xl" : "text-lg"
+                    shortContent
+                      ? "text-2xl sm:text-lg"
+                      : "text-lg 2xl:text-2xl sm:text-base"
                   }`}
                 >
-                  <div className="text-4xl">
+                  <div
+                    className={`${
+                      shortContent
+                        ? "text-5xl sm:text-2xl"
+                        : "text-4xl sm:text-2xl"
+                    }`}
+                  >
                     <CgProfile />
                   </div>
                   {capitalize(atob(atob(formData.user.name)))}
                 </div>
               ) : (
-                <div
-                  className={`flex gap-1 items-center w-full ${
-                    shortContent ? "text-2xl" : "text-lg"
-                  }`}
-                >
-                  <div className="text-4xl">
+                <div className={`flex gap-1 items-center w-full`}>
+                  <div className={`${shortContent ? "text-2xl" : "text-lg"}`}>
                     <CgProfile />
                   </div>
                   Anonymous
@@ -207,8 +219,10 @@ function ViewPost({
 
               <div
                 className={`text-justify ${
-                  shortContent ? "text-2xl" : "text-base"
-                } break-words whitespace-break-spaces w-full`}
+                  shortContent
+                    ? "text-2xl sm:text-base"
+                    : "text-base 2xl:text-xl xl:text-base md:text-sm sm:text-xs"
+                } break-words whitespace-break-spaces w-full px-2`}
               >
                 {formData.content}
               </div>
@@ -220,12 +234,18 @@ function ViewPost({
           <div className="w-full flex flex-col gap-2">
             {/* displaying */}
 
-            <Comments postId={formData.id} />
+            <Comments postId={formData.id} shortContent={shortContent} />
 
             {/* Adding comment */}
 
             {commentError !== null && (
-              <div>{commentError ? "Failed" : "Success"}</div>
+              <div
+                className={`${
+                  commentError ? "bg-red-700" : "bg-green-600"
+                } text-white text-lg py-1 px-3 rounded-2xl text-center animate-fadeIn xl:py-0 xl:text-sm`}
+              >
+                {commentError ? "Failed" : "Comment Added"}
+              </div>
             )}
 
             <form
