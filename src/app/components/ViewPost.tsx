@@ -249,7 +249,7 @@ function ViewPost({
             )}
 
             <form
-              className="flex items-center w-full gap-4 justify-center"
+              className="flex items-center w-full gap-4 justify-center mt-2"
               onSubmit={AddComment}
             >
               <input
