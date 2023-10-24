@@ -150,7 +150,7 @@ function ViewPost({
           {/* content */}
           <div
             className={`w-full bg-slate-500/30 p-4 rounded-2xl flex flex-wrap xl:flex-nowrap ${
-              shortContent ? "sm:flex-wrap" : ""
+              shortContent ? "sm:flex-wrap" : "xs:flex-wrap"
             } items-center justify-evenly lg:gap-2 2xl:p-2`}
           >
             {formData.image && (
@@ -159,7 +159,7 @@ function ViewPost({
                   loading="lazy"
                   src={formData.image}
                   alt="image"
-                  className="max-h-fit object-contain w-600 h-96 rounded-lg"
+                  className="max-h-fit object-contain w-600 h-96 rounded-lg xs:w-full xs:max-h-52"
                   onClick={() => setOpenImage(true)}
                 />
               </div>
@@ -175,7 +175,7 @@ function ViewPost({
                       setOpenImage(false);
                       setCommentClicked(false);
                     }}
-                    className="bg-red-600 text-white rounded-2xl px-4 text-3xl fixed top-12 right-12 hover:shadow-xl"
+                    className="bg-red-600 text-white rounded-2xl px-4 text-3xl fixed top-12 right-12 hover:shadow-xl xs:text-base"
                   >
                     Close
                   </button>
