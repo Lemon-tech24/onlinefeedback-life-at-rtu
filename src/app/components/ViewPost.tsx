@@ -116,9 +116,9 @@ function ViewPost({
   };
 
   return (
-    <div className="fixed top-0 left-0 flex items-center xl:items-start xl:pt-2 md:p-0 md:pt-5 sm:items-center justify-center w-full h-full bg-slate-500/80 z-50 animate-fadeIn overflow-hidden">
+    <div className="fixed top-0 left-0 flex items-center p-5 xl:items-start xl:pt-2 md:p-0 md:pt-5 sm:p-0 sm:items-center justify-center w-full h-full bg-slate-500/80 z-50 animate-fadeIn overflow-hidden">
       <div
-        className={`bg-white p-4 rounded-2xl ${
+        className={`bg-white p-4 xs:p-1 rounded-2xl xs:rounded-lg ${
           shortContent
             ? "w-5/12 2xl:w-8/12 lg:w-10/12 sm:p-1 sm:w-11/12"
             : "w-1/2 2xl:w-9/12 xl:w-11/12"
@@ -136,7 +136,7 @@ function ViewPost({
           </button>
         </div>
         {/* Contents */}
-        <div className="flex flex-col w-full items-center gap-1">
+        <div className="flex flex-col w-full items-center gap-1 xs:gap-0">
           <div className="text-2xl font-semibold break-words w-full text-justify 2xl:text-3xl xl:text-xl">
             {formData.title}
           </div>
@@ -149,7 +149,7 @@ function ViewPost({
 
           {/* content */}
           <div
-            className={`w-full bg-slate-500/30 p-4 rounded-2xl flex flex-wrap xl:flex-nowrap ${
+            className={`w-full bg-slate-500/30 p-4 rounded-2xl flex flex-wrap ${
               shortContent ? "sm:flex-wrap" : "xs:flex-wrap"
             } items-center justify-evenly lg:gap-2 2xl:p-2`}
           >
@@ -159,7 +159,7 @@ function ViewPost({
                   loading="lazy"
                   src={formData.image}
                   alt="image"
-                  className="max-h-fit object-contain w-600 h-96 rounded-lg xs:w-full xs:max-h-52"
+                  className="object-contain w-600 h-72 rounded-lg xs:w-full xs:max-h-52"
                   onClick={() => setOpenImage(true)}
                 />
               </div>
@@ -175,7 +175,7 @@ function ViewPost({
                       setOpenImage(false);
                       setCommentClicked(false);
                     }}
-                    className="bg-red-600 text-white rounded-2xl px-4 text-3xl fixed top-12 right-12 hover:shadow-xl xs:text-base"
+                    className="bg-red-600 text-white rounded-2xl px-4 text-3xl fixed top-12 right-12 hover:shadow-xl sm:right-2 xs:top-16 xs:text-base"
                   >
                     Close
                   </button>
@@ -221,8 +221,8 @@ function ViewPost({
                 className={`text-justify ${
                   shortContent
                     ? "text-2xl sm:text-base"
-                    : "text-base 2xl:text-xl xl:text-base md:text-sm sm:text-xs"
-                } break-words whitespace-break-spaces w-full px-2`}
+                    : "text-base 2xl:text-xl xl:text-base md:text-sm sm:text-xs xs:text-xs"
+                } break-words whitespace-break-spaces w-full px-2 xs:p-0`}
               >
                 {formData.content}
               </div>

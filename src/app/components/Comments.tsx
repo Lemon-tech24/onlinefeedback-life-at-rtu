@@ -45,7 +45,7 @@ function Comments({ postId, shortContent }: Data) {
     <>
       {data && data.comments.length > 0 ? (
         <div
-          className={`w-full bg-slate-500/30 rounded-lg overflow-y-auto max-h-44 2xl:max-h-36 xl:max-h-32 ${
+          className={`w-full bg-slate-500/30 rounded-lg overflow-y-auto max-h-44 2xl:max-h-36 xl:max-h-32 xs:max-h-24 xs:mt-2 ${
             shortContent ? "sm:max-h-44" : ""
           } p-3 flex flex-col gap-4 2xl:gap-2 2xl:p-1`}
         >
@@ -63,11 +63,11 @@ function Comments({ postId, shortContent }: Data) {
                       <div className="text-3xl sm:text-base">
                         <CgProfile />
                       </div>
-                      <div className="flex items-center sm:text-base">
+                      <div className="flex items-center sm:text-base xs:text-sm">
                         {capitalize(item.user?.name)}
                       </div>
                     </div>
-                    <div className="break-words whitespace-break-spaces text-justify w-full px-2 sm:text-sm">
+                    <div className="break-words whitespace-break-spaces text-justify w-full px-2 sm:text-sm xs:text-xs">
                       {item.content}
                     </div>
                   </div>
