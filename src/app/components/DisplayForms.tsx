@@ -404,8 +404,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         fill={
                           item.likes &&
                           item.likes.some(
-                            (element: DataForm) =>
-                              element.userId === currentUserId
+                            (like: any) =>
+                              like.postId === item.id &&
+                              like.userId === currentUserId
                           )
                             ? "red"
                             : "black"
