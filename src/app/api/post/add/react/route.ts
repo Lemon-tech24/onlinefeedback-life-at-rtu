@@ -13,10 +13,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (likeExists) {
-      const deleteLikes = await prisma.like.deleteMany({
+      const deleteLikes = await prisma.like.delete({
         where: {
-          postId: postId,
-          userId: userId,
+          id: likeExists.id,
         },
       });
       console.log("Like Removed");

@@ -56,13 +56,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     "/api/post/get/data",
     fetcher,
     {
-      refreshInterval: 6,
+      refreshInterval: 500,
     }
   );
-
-  useEffect(() => {
-    mutate("/api/post/get/data");
-  }, []);
 
   //open post see whole post/comments etc.
   const [openDetails, setOpenDetails] = useState<boolean>(false);
