@@ -1,5 +1,11 @@
 import axios from "axios";
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ChangeEvent,
+  FormEvent,
+} from "react";
 import { CgProfile } from "react-icons/cg";
 import { BsHeartFill, BsPeopleFill } from "react-icons/bs";
 import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
@@ -62,6 +68,20 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [selectedDetails, setSelectedDetails] = useState<string>("");
 
+  //overlay of report
+  const [openReport, setOpenReport] = useState<boolean>(false);
+  //set post to report
+  const [postToReport, setpostToReport] = useState<string>("");
+
+  //report category
+  const [category, setCategory] = useState<string>("");
+
+  //form report
+  const ReportRef = useRef<HTMLFormElement>(null);
+
+  //report notif
+  const [reportNotif, setReportNotif] = useState<string>("");
+
   const DeletePost = async (postId: string) => {
     if (deleteRef.current) {
       deleteRef.current.disabled = true;
@@ -116,6 +136,45 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     );
   };
 
+  const ReportChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setCategory(e.target.value);
+  };
+
+  const ReportPost = async (
+    e: FormEvent<HTMLFormElement>,
+    postId: string,
+    userId: string,
+    reason: string
+  ) => {
+    e.preventDefault();
+
+    try {
+      console.log("post id: ", postId);
+      console.log("user id who report it: ", userId);
+      console.log("Reason of report: ", reason);
+
+      const response = await axios.post("/api/post/add/report", {
+        postId: postId,
+        userId: userId,
+        reason: reason,
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+        setReportNotif("Successfully Added");
+      } else {
+        setReportNotif(data.message);
+      }
+
+      setTimeout(() => {
+        setReportNotif("");
+        setOpenReport(false);
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   console.log("To be display", data);
   return (
     <div className="columns-4 gap-5 mb-4 mx-10 2xl:columns-3 xl:columns-3 lg:columns-3 lg:gap-3 lg:mb-2 lg:mx-5 md:columns-2 md:mx-3 md:mb-2 md:gap-3 sm:columns-1 sm:mb-4">
@@ -132,6 +191,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
         </div>
       ) : (
         data &&
+        data.posts &&
         data.posts
           .slice(0)
           .reverse()
@@ -141,6 +201,53 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                 <div
                   className={`mb-3 h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer lg:p-2 sm:w-full sm:m-auto sm:mb-4`}
                 >
+                  {openReport && (
+                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-500 animate-fadeIn">
+                      <div className="flex flex-col w-5/12 bg-white rounded-2xl p-4">
+                        {reportNotif ? (
+                          <div className="absolute top-0 left-0 bg-slate-500/60 z-50 text-2xl w-full h-full flex items-center justify-center">
+                            {reportNotif}
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        <div className="w-full flex items-center justify-end">
+                          <button
+                            className="rounded-xl text-white text-xl w-24 bg-red-600"
+                            type="button"
+                            onClick={() => setOpenReport(false)}
+                          >
+                            Close
+                          </button>
+                        </div>
+
+                        <form
+                          className="flex items-center justify-center gap-4"
+                          ref={ReportRef}
+                          onSubmit={(e) =>
+                            ReportPost(e, postToReport, currentUserId, category)
+                          }
+                        >
+                          <select
+                            className="border-2 border-black border-solid rounded-lg p-1"
+                            onChange={ReportChange}
+                            required
+                          >
+                            <option value="">Please Select</option>
+                            <option value="spam">Spam</option>
+                            <option value="sexual">Sexual</option>
+                            <option value="hate speech">Hate Speech</option>
+                            <option value="profanity">Profanity</option>
+                            <option value="harassment">Harassment</option>
+                            <option value="violence">Violence</option>
+                            <option value="others">Others</option>
+                          </select>
+
+                          <button type="submit">Report</button>
+                        </form>
+                      </div>
+                    </div>
+                  )}
                   {/* when deleting show this */}
                   {overlayDelete && postToDelete === item.id ? (
                     <div className="absolute w-full h-full top-0 left-0 bg-slate-500/50 flex items-center justify-center">
@@ -218,7 +325,15 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         </button>
                       </div>
                     ) : openDots[item.id] && currentUserId !== item.userId ? (
-                      <button>Report</button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenReport(true);
+                          setpostToReport(item.id);
+                        }}
+                      >
+                        Report
+                      </button>
                     ) : (
                       ""
                     )}
@@ -324,6 +439,8 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     <div className="text-2xl">
                       <BsPeopleFill />
                     </div>
+
+                    <div>Reports: {item.countreports}</div>
                   </div>
 
                   {/*Edit FOrm*/}

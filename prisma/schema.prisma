@@ -14,7 +14,7 @@ model User {
   posts    Post[]
   comments Comment[]
   likes    Like[]
-  Reports   Report[]
+  reports   Report[]
 }
 
 model Post {
@@ -29,7 +29,7 @@ model Post {
   comments  Comment[]
   createdAt DateTime  @default(now())
   likes     Like[]
-  Reports    Report[]
+  reports    Report[]
 }
 
 model Comment {
