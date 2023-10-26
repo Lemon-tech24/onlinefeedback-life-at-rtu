@@ -56,7 +56,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     "/api/post/get/data",
     fetcher,
     {
-      refreshInterval: 500,
+      refreshInterval: 600,
     }
   );
 
@@ -182,8 +182,10 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
           <div className="text-2xl ">Loading Data...</div>
         </div>
       ) : data.posts.length === 0 ? (
-        <div className="fixed top-0 left-0 flex items-center z-50">
-          Empty Posts
+        <div className="fixed top-14 2xl:top-0 left-28 w-full h-full flex items-center justify-start text-7xl font-semibold sm:text-6xl xs:text-3xl xs:left-24">
+          We Care <br />
+          about what <br />
+          you think.
         </div>
       ) : (
         data &&
@@ -304,6 +306,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         <button
                           type="button"
                           onClick={() => setEdit({ ...edit, [item.id]: true })}
+                          className="bg-yellow-600 text-white rounded-xl px-2"
                         >
                           Edit this Post
                         </button>
@@ -311,6 +314,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         <button
                           type="button"
                           ref={deleteRef}
+                          className="bg-red-700 text-white rounded-xl px-2"
                           onClick={() => {
                             setPostToDelete(item.id);
                             setOpenDelete(true);
