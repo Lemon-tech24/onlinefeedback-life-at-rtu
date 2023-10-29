@@ -266,7 +266,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                             <div
                               className={`${
                                 deleteFailed ? "bg-red-700" : "bg-green-700"
-                              } text-white rounded-2xl text-2xl text-center`}
+                              } text-white rounded-2xl text-2xl text-center px-1`}
                             >
                               {deleteNotif}
                             </div>
