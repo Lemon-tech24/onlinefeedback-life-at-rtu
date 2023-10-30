@@ -15,6 +15,7 @@ model User {
   comments Comment[]
   likes    Like[]
   reports   Report[]
+  seens Seen[]
 }
 
 model Post {
@@ -30,6 +31,7 @@ model Post {
   createdAt DateTime  @default(now())
   likes     Like[]
   reports    Report[]
+  seens Seen[]
 }
 
 model Comment {
@@ -39,6 +41,7 @@ model Comment {
   post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId  String
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Like {
@@ -47,6 +50,7 @@ model Like {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Report {
@@ -56,4 +60,14 @@ model Report {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   reason String
+  createdAt DateTime @default(now())
+}
+
+model Seen{
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String @db.ObjectId
+  userId String 
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())  
 }

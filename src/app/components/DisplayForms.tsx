@@ -172,6 +172,25 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     }
   };
   console.log("To be display", data);
+
+  const handleSeen = async (postId: string, userId: string) => {
+    try {
+      const response = await axios.post("/api/post/add/seen", {
+        postId: postId,
+        userId: userId,
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+        console.log("seen added");
+      } else {
+        console.log("seen not added");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="columns-4 gap-5 mb-4 mx-10 2xl:columns-3 xl:columns-3 lg:columns-3 lg:gap-3 lg:mb-2 lg:mx-5 md:columns-2 md:mx-3 md:mb-2 md:gap-3 sm:columns-1 sm:mb-4">
       {isLoading ? (
@@ -370,6 +389,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     className="bg-slate-100 rounded-tl-xl rounded-tr-xl p-5 flex items-center flex-col gap-5 sm:p-2 sm:w-full"
                     onClick={() => {
                       setOpenDetails(true);
+                      handleSeen(item.id, currentUserId);
                       setSelectedDetails(item.id);
                     }}
                   >
@@ -437,8 +457,15 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                       </p>
                     </div>
 
-                    <div className="text-2xl">
-                      <BsPeopleFill />
+                    <div className="flex items-center gap-1">
+                      <div className="text-2xl">
+                        <BsPeopleFill />
+                      </div>
+                      <p>
+                        {item.countseens && item.countseens >= 1000
+                          ? (item.countseens / 1000).toFixed(1) + "k"
+                          : item.countseens}
+                      </p>
                     </div>
 
                     <div>Reports: {item.countreports}</div>

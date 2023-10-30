@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
 
         likes: true,
         reports: true,
+        seens: true,
       },
     });
 
@@ -33,6 +34,7 @@ export async function POST(request: NextRequest) {
 
             countlikes: post.likes.length,
             countreports: post.reports.length,
+            countseens: post.seens.length,
           };
         } else {
           return post;

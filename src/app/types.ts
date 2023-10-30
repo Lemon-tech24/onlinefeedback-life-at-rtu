@@ -17,6 +17,7 @@ export interface DataForm {
   };
   countlikes?: number;
   countreports?: number;
+  countseens?: number;
 }
 
 export interface FormProps {
