@@ -220,7 +220,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   className={`mb-3 h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer lg:p-2 sm:w-full sm:m-auto sm:mb-4`}
                 >
                   {openReport && (
-                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-500 animate-fadeIn">
+                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-500 animate-fadeIn z-50">
                       <div className="flex flex-col w-5/12 bg-white rounded-2xl p-4">
                         {reportNotif ? (
                           <div className="absolute top-0 left-0 bg-slate-500/60 z-50 text-2xl w-full h-full flex items-center justify-center">
@@ -293,13 +293,14 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                           </div>
                         )}
                         <div className="text-xl font-bold flex w-full items-center justify-center md:font-semibold md:text-lg">
-                          Are you sure you want to delete the Post?
+                          Are you sure you want to delete the post?
                         </div>
 
                         <div className="flex w-full items-center justify-center gap-5 md:gap-3">
                           <button
                             onClick={() => DeletePost(postToDelete)}
-                            className="bg-green-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
+                            className="text-black p-1 font-semibold rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
+                            style={{ backgroundColor: "#D9D9D9" }}
                           >
                             Yes
                           </button>
@@ -308,7 +309,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                               setOpenDelete(false);
                               setOverlayDelete(false);
                             }}
-                            className="bg-red-700 text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
+                            className="bg-red-700 font-semibold text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
                           >
                             No
                           </button>
@@ -326,15 +327,16 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         <button
                           type="button"
                           onClick={() => setEdit({ ...edit, [item.id]: true })}
-                          className="bg-yellow-600 text-white rounded-xl px-2"
+                          className="text-black rounded-lg px-2"
+                          style={{ backgroundColor: "#D9D9D9" }}
                         >
-                          Edit this Post
+                          Edit
                         </button>
 
                         <button
                           type="button"
                           ref={deleteRef}
-                          className="bg-red-700 text-white rounded-xl px-2"
+                          className="bg-red-700 text-white rounded-lg px-2"
                           onClick={() => {
                             setPostToDelete(item.id);
                             setOpenDelete(true);
@@ -351,6 +353,8 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                           setOpenReport(true);
                           setpostToReport(item.id);
                         }}
+                        className="text-black px-1 rounded-lg"
+                        style={{ backgroundColor: "#D9D9D9" }}
                       >
                         Report
                       </button>
@@ -384,7 +388,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     </p>
                     <p>Focus: {capitalize(item.concern)}</p>
                     <p className="text-xs">
-                      {moment(item.createdAt).format("llll")}
+                      {moment(item.createdAt).format("lll")}
                     </p>
                   </div>
 
