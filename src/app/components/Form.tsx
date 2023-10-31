@@ -240,7 +240,11 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
       )}
 
       <div className="w-full">
-        {imgError && <p>{imgError}</p>}
+        {imgError && (
+          <p className="text-white bg-red-600 px-2 rounded-2xl w-1/2 text-center">
+            {imgError}
+          </p>
+        )}
 
         {/*------------------------------------------------------*/}
 

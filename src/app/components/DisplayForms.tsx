@@ -16,6 +16,7 @@ import { VscLoading } from "react-icons/vsc";
 import { IoSettingsOutline } from "react-icons/io5";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import ViewPost from "./ViewPost";
+import moment from "moment";
 
 function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //open menu 3 dots
@@ -382,6 +383,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                       {item.title}
                     </p>
                     <p>Focus: {capitalize(item.concern)}</p>
+                    <p className="text-xs">
+                      {moment(item.createdAt).format("llll")}
+                    </p>
                   </div>
 
                   {/* Content */}
@@ -467,8 +471,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                           : item.countseens}
                       </p>
                     </div>
-
-                    <div>Reports: {item.countreports}</div>
                   </div>
 
                   {/*Edit FOrm*/}
@@ -506,6 +508,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         id: item.user?.id ?? "",
                         name: item.user?.name ?? "",
                       },
+                      createdAt: item.createdAt,
                     }}
                     commentClicked={Clicked}
                     currentUserId={currentUserId}

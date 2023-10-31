@@ -12,6 +12,7 @@
     "@prisma/client": "^5.4.2",
     "ahooks": "^3.7.8",
     "axios": "^1.5.1",
+    "moment": "^2.29.4",
     "next": "13.5.4",
     "next-auth": "^4.23.2",
     "prisma": "^5.4.2",

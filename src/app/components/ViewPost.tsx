@@ -4,6 +4,7 @@ import { CgProfile } from "react-icons/cg";
 import { AiOutlineSend } from "react-icons/ai";
 import axios from "axios";
 import Comments from "./Comments";
+import moment from "moment";
 
 function ViewPost({
   formData,
@@ -145,6 +146,10 @@ function ViewPost({
             <p className="font-semibold first-letter:uppercase">
               {formData.concern}
             </p>
+          </div>
+
+          <div className="text-xs flex items-center w-full justify-start">
+            {moment(formData.createdAt).format("llll")}
           </div>
 
           {/* content */}
