@@ -1,7 +1,7 @@
 import { FormProps, DataForm } from "@/app/types";
 import axios from "axios";
 import React, { ChangeEvent, useState, useRef } from "react";
-import { FaUserSecret } from "react-icons/fa6";
+import { BsIncognito } from "react-icons/bs";
 import { BsPatchCheck } from "react-icons/bs";
 import { BiImageAdd } from "react-icons/bi";
 import { VscLoading } from "react-icons/vsc";
@@ -210,7 +210,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
               {/* First paragraph */}
               <div className="flex items-center justify-start gap-5 w-10/12 full m-auto md:w-full md:gap-3">
                 <div className="text-3xl sm:text-2xl">
-                  <FaUserSecret />
+                  <BsIncognito />
                 </div>
                 <p className="text-justify sm:text-sm">
                   Admins of the Life@RTU can see your name for satefy purposes.
@@ -232,7 +232,8 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
 
             <button
               type="button"
-              className="rounded-xl p-1 text-lg text-white bg-blue-800"
+              className="rounded-xl p-1 text-lg text-black"
+              style={{ backgroundColor: "#3085C3" }}
               onClick={() => setAgreement(false)}
             >
               Agree
@@ -295,8 +296,8 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
               >
                 <option value=""></option>
                 <option value="facility">Facility</option>
-                <option value="student">Student</option>
                 <option value="professor">Professor</option>
+                <option value="experience">Experience</option>
                 <option value="others">Others</option>
               </select>
             </div>
@@ -304,7 +305,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
             {/*CONTENT*/}
             <div className="w-full flex items-center justify-center flex-col">
               <textarea
-                placeholder="Let your voice be heard."
+                placeholder="What's Happening now?"
                 name="content"
                 className="resize-none w-full h-96 outline-none rounded-t-xl text-xl text-justify p-4"
                 value={formData.content}
@@ -377,12 +378,12 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
                 type="button"
                 onClick={handleCheckBox}
                 style={{
-                  color: checkboxRef.current?.checked ? "white" : "black",
+                  color: checkboxRef.current?.checked ? "black" : "white",
                 }}
                 className="text-3xl flex items-center justify-center"
               >
                 {/* White means yes anonymous, Blacks means no anonymous */}
-                <FaUserSecret />
+                <BsIncognito />
               </button>
 
               {/* button */}
@@ -392,7 +393,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
                 className="text-lg p-2 text-black rounded-xl font-semibold"
                 style={{ backgroundColor: "#3085C3" }}
               >
-                {mode === "edit" ? "Save Post" : "Add Post"}
+                Submit
               </button>
             </div>
             {/* end */}

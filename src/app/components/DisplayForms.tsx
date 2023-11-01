@@ -13,7 +13,7 @@ import { DataForm, DisplayForm } from "../types";
 import Form from "./Form";
 import useSWR from "swr";
 import { VscLoading } from "react-icons/vsc";
-import { IoSettingsOutline } from "react-icons/io5";
+import { CgClose } from "react-icons/cg";
 import { LuSettings2 } from "react-icons/lu";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import ViewPost from "./ViewPost";
@@ -213,7 +213,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
             return (
               <React.Fragment key={key}>
                 <div
-                  className={`mb-3 h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer lg:p-2 sm:w-full sm:m-auto sm:mb-4`}
+                  className={`mb-3 h-full relative overflow-auto break-inside-avoid p-2 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer lg:p-2 sm:w-full sm:m-auto sm:mb-4`}
                 >
                   {openReport && (
                     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-500/70 animate-fadeIn z-50">
@@ -227,14 +227,14 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         )}
                         <div className="w-full flex items-center justify-end">
                           <button
-                            className="rounded-xl text-white text-xl w-24 bg-red-600 xs:text-base"
+                            className=" text-black text-xl xs:text-base"
                             type="button"
                             onClick={() => {
                               setOpenReport(false);
                               setCategory("");
                             }}
                           >
-                            Close
+                            <CgClose />
                           </button>
                         </div>
 
@@ -257,15 +257,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                             <div className="flex flex-col items-start justify-center xs:text-sm">
                               <button
                                 type="button"
-                                onClick={() => setCategory("terroism")}
-                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
-                                  category === "terroism" ? "bg-gray-300" : ""
-                                }`}
-                              >
-                                Terroism
-                              </button>
-                              <button
-                                type="button"
                                 onClick={() => setCategory("hate speech")}
                                 className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
                                   category === "hate speech"
@@ -275,19 +266,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                               >
                                 Hate Speech
                               </button>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setCategory("unauthorized sales")
-                                }
-                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
-                                  category === "unauthorized sales"
-                                    ? "bg-gray-300"
-                                    : ""
-                                }`}
-                              >
-                                Unauthorized Sales
-                              </button>
+
                               <button
                                 type="button"
                                 onClick={() => setCategory("spam")}
@@ -365,7 +344,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                           <div className="w-full flex items-center justify-center">
                             <button
                               type="submit"
-                              className="text-black font-semibold p-1 rounded-xl"
+                              className="text-black font-bold p-1 rounded-xl uppercase"
                               style={{ backgroundColor: "#3085C3" }}
                             >
                               Report
@@ -496,11 +475,16 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   </div>
 
                   {/* Header */}
-                  <div>
+                  <div className="px-2 pb-1">
                     <p className="font-bold text-2xl break-words text-justify line-clamp-2 text-ellipsis w-full 2xl:text-3xl xl:text-3xl">
                       {item.title}
                     </p>
-                    <p>Focus: {capitalize(item.concern)}</p>
+                    <div className="flex gap-1">
+                      Focus:
+                      <p className="uppercase font-semibold">
+                        {capitalize(item.concern)}
+                      </p>
+                    </div>
                     <p className="text-xs">
                       {moment(item.createdAt).format("lll")}
                     </p>
@@ -516,7 +500,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                     }}
                   >
                     {/* Who Post it */}
-                    <div className="flex items-center justify-start text-xl gap-1 w-full">
+                    <div className="flex items-center justify-start text-xl gap-1 w-full font-semibold">
                       <div className="text-5xl">
                         <CgProfile />
                       </div>
