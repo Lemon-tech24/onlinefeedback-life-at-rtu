@@ -64,9 +64,6 @@ export default function Home() {
               matters
             </div>
 
-            <div className="text-2xl italic w-full text-center text-slate-700 md:text-xl sm:text-base break-words xs:text-sm xs:p-1">
-              We make it easier to share your thoughts about the campus
-            </div>
             <button
               type="button"
               onClick={() => signIn("google", { callbackUrl: "/home" })}

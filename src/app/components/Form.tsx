@@ -197,12 +197,12 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
       {/* ANONYMOUS AGREEMENT */}
       {openAgreement && (
         <div
-          className={`absolute top-0 left-0 w-full h-full z-50 bg-slate-500/80 flex items-center justify-center ${
+          className={`fixed top-0 left-0 w-full h-full z-50 bg-slate-500/80 flex items-center justify-center ${
             openAgreement ? "animate-fadeIn" : "animate-fadeOut"
           }`}
         >
-          <div className="flex flex-col items-center gap-5 bg-white w-10/12 rounded-xl p-4 md:p-2 sm:w-11/12">
-            <p className="text-xl font-bold">Anonymous Post</p>
+          <div className="flex flex-col items-center gap-5 bg-white w-5/12 rounded-xl p-4 md:p-2 sm:w-11/12">
+            <p className="text-2xl font-bold">Anonymous Post</p>
             <p className="text-lg md:text-base text-center sm:text-sm">
               Anonymous posts published in the website do not include your name
             </p>
@@ -232,7 +232,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
 
             <button
               type="button"
-              className="rounded-xl p-1 text-lg text-black"
+              className="rounded-lg px-3 text-lg text-black"
               style={{ backgroundColor: "#3085C3" }}
               onClick={() => setAgreement(false)}
             >
@@ -378,7 +378,7 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
                 type="button"
                 onClick={handleCheckBox}
                 style={{
-                  color: checkboxRef.current?.checked ? "black" : "white",
+                  color: checkboxRef.current?.checked ? "#706f6d" : "black",
                 }}
                 className="text-3xl flex items-center justify-center"
               >
