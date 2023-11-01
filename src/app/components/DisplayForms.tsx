@@ -42,9 +42,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //delete Ref
   const deleteRef = useRef<HTMLButtonElement | null>(null);
 
-  //delete notif
-  const [deleteNotif, setDeleteNotif] = useState<string>("");
-
   //delete success indicator failed or success
   const [deleteFailed, setDeleteFailed] = useState<boolean>(false);
 
@@ -91,17 +88,14 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
       const data = await response.data;
 
       if (data.success) {
-        setDeleteNotif("Successfully Deleted");
         setDeleteFailed(false);
         setOverlayDelete(false);
       } else if (data.success === false) {
-        setDeleteNotif("Failed To Delete");
         setDeleteFailed(true);
         setOverlayDelete(false);
       }
     } catch (error) {
       console.error("Error deleting post:", error);
-      setDeleteNotif("Error: Failed To Delete");
     }
 
     if (deleteRef.current) {
@@ -110,7 +104,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
 
     setTimeout(() => {
       setOpenDelete(false);
-      setDeleteNotif("");
     }, 1200);
   };
 
@@ -374,17 +367,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   {openDelete && (
                     <div className="bg-slate-500/10 z-50 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
                       <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6 md:p-2 md:gap-3">
-                        {deleteNotif && (
-                          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-slate-500/40">
-                            <div
-                              className={`${
-                                deleteFailed ? "bg-red-700" : "bg-green-700"
-                              } text-white rounded-2xl text-2xl text-center px-1`}
-                            >
-                              {deleteNotif}
-                            </div>
-                          </div>
-                        )}
                         <div className="text-xl font-bold flex w-full items-center justify-center md:font-semibold md:text-lg">
                           Are you sure you want to delete the post?
                         </div>
