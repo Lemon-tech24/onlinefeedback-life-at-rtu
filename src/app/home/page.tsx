@@ -95,11 +95,20 @@ function Page() {
       />
 
       {isOpen && (
-        <Form
-          mode={"add"}
-          initialData={formData}
-          onCancel={() => setOpen(false)}
-        />
+        <>
+          <p
+            style={{ backgroundColor: "#DBD9D9" }}
+            className="p-1 rounded-lg text-xs font-semibold break-words w-3/12 text-justify fixed bottom-12 left-10 animate-fadeIn"
+          >
+            Share your thoughts anonymously by clicking the anonymous icon and
+            you can add photo if you want. *Maximum 1 photo only*
+          </p>
+          <Form
+            mode={"add"}
+            initialData={formData}
+            onCancel={() => setOpen(false)}
+          />
+        </>
       )}
 
       {session && (

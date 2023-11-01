@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Head from "next/head";
 import { Inter } from "next/font/google";
 import Provider from "./components/Provider";
 
@@ -17,6 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Poppins"
+        />
+      </Head>
       <body className={inter.className}>
         <Provider>{children}</Provider>
       </body>

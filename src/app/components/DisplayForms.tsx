@@ -14,6 +14,7 @@ import Form from "./Form";
 import useSWR from "swr";
 import { VscLoading } from "react-icons/vsc";
 import { IoSettingsOutline } from "react-icons/io5";
+import { LuSettings2 } from "react-icons/lu";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import ViewPost from "./ViewPost";
 import moment from "moment";
@@ -133,10 +134,6 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     );
   };
 
-  const ReportChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setCategory(e.target.value);
-  };
-
   const ReportPost = async (
     e: FormEvent<HTMLFormElement>,
     postId: string,
@@ -146,10 +143,9 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
     e.preventDefault();
 
     try {
-      console.log("post id: ", postId);
-      console.log("user id who report it: ", userId);
-      console.log("Reason of report: ", reason);
-
+      if (!reason) {
+        alert("Category Required to report");
+      }
       const response = await axios.post("/api/post/add/report", {
         postId: postId,
         userId: userId,
@@ -159,7 +155,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
       const data = response.data;
 
       if (data.success) {
-        setReportNotif("Successfully Added");
+        setReportNotif("Successfully Reported");
       } else {
         setReportNotif(data.message);
       }
@@ -202,7 +198,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
           <div className="text-2xl ">Loading Data...</div>
         </div>
       ) : data.posts.length === 0 ? (
-        <div className="fixed top-14 2xl:top-0 left-28 w-full h-full flex items-center justify-start text-7xl font-semibold sm:text-6xl xs:text-3xl xs:left-24">
+        <div className="fixed top-14 2xl:top-0 left-32 w-full h-full flex items-center justify-start text-7xl font-semibold sm:text-6xl xs:text-3xl xs:left-24">
           We Care <br />
           about what <br />
           you think.
@@ -220,8 +216,8 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   className={`mb-3 h-full relative overflow-auto break-inside-avoid p-3 rounded-2xl bg-slate-400/80 shadow-sm hover:shadow-2xl hover:duration-500 cursor-pointer lg:p-2 sm:w-full sm:m-auto sm:mb-4`}
                 >
                   {openReport && (
-                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-500 animate-fadeIn z-50">
-                      <div className="flex flex-col w-5/12 bg-white rounded-2xl p-4">
+                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-500/70 animate-fadeIn z-50">
+                      <div className="flex flex-col w-5/12 xl:w-7/12 md:w-9/12 xs:w-11/12 bg-white rounded-2xl p-4">
                         {reportNotif ? (
                           <div className="absolute top-0 left-0 bg-slate-500/60 z-50 text-2xl w-full h-full flex items-center justify-center">
                             {reportNotif}
@@ -231,37 +227,155 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                         )}
                         <div className="w-full flex items-center justify-end">
                           <button
-                            className="rounded-xl text-white text-xl w-24 bg-red-600"
+                            className="rounded-xl text-white text-xl w-24 bg-red-600 xs:text-base"
                             type="button"
-                            onClick={() => setOpenReport(false)}
+                            onClick={() => {
+                              setOpenReport(false);
+                              setCategory("");
+                            }}
                           >
                             Close
                           </button>
                         </div>
 
                         <form
-                          className="flex items-center justify-center gap-4"
+                          className="w-full flex flex-col items-start justify-center gap-4"
                           ref={ReportRef}
                           onSubmit={(e) =>
                             ReportPost(e, postToReport, currentUserId, category)
                           }
                         >
-                          <select
-                            className="border-2 border-black border-solid rounded-lg p-1"
-                            onChange={ReportChange}
-                            required
-                          >
-                            <option value="">Please Select</option>
-                            <option value="spam">Spam</option>
-                            <option value="sexual">Sexual</option>
-                            <option value="hate speech">Hate Speech</option>
-                            <option value="profanity">Profanity</option>
-                            <option value="harassment">Harassment</option>
-                            <option value="violence">Violence</option>
-                            <option value="others">Others</option>
-                          </select>
+                          <div className="flex flex-col w-full">
+                            <div className="w-full flex items-center justify-center text-2xl">
+                              Report
+                            </div>
+                            <p className="text-xl">Please Select a problem</p>
+                            <p className="text-sm break-words whitespace-normal xs:text-xs">
+                              if someone is in immediate danger, get help before
+                              reporting to admins. Don't Wait.
+                            </p>
+                            <div className="flex flex-col items-start justify-center xs:text-sm">
+                              <button
+                                type="button"
+                                onClick={() => setCategory("terroism")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "terroism" ? "bg-gray-300" : ""
+                                }`}
+                              >
+                                Terroism
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("hate speech")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "hate speech"
+                                    ? "bg-gray-300"
+                                    : ""
+                                }`}
+                              >
+                                Hate Speech
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setCategory("unauthorized sales")
+                                }
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "unauthorized sales"
+                                    ? "bg-gray-300"
+                                    : ""
+                                }`}
+                              >
+                                Unauthorized Sales
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("spam")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "spam" ? "bg-gray-300" : ""
+                                }`}
+                              >
+                                Spam
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("false information")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "false information"
+                                    ? "bg-gray-300"
+                                    : ""
+                                }`}
+                              >
+                                False Information
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setCategory("suicidal or selfinjury")
+                                }
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "suicidal or selfinjury"
+                                    ? "bg-gray-300"
+                                    : ""
+                                }`}
+                              >
+                                Suicidal or Self-injury
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("harassment")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "harassment" ? "bg-gray-300" : ""
+                                }`}
+                              >
+                                Harrassment
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("violence")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "violence" ? "bg-gray-300" : ""
+                                }`}
+                              >
+                                Violence
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("nudity")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "nudity" ? "bg-gray-300" : ""
+                                }`}
+                              >
+                                Nudity
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCategory("something else")}
+                                className={`font-semibold p-1 rounded-xl w-5/12 text-left ${
+                                  category === "something else"
+                                    ? "bg-gray-300"
+                                    : ""
+                                }`}
+                              >
+                                Something else
+                              </button>
+                            </div>
+                          </div>
 
-                          <button type="submit">Report</button>
+                          <div className="w-full flex items-center justify-center">
+                            <button
+                              type="submit"
+                              className="text-black font-semibold p-1 rounded-xl"
+                              style={{ backgroundColor: "#3085C3" }}
+                            >
+                              Report
+                            </button>
+                          </div>
+
+                          <p className="w-full text-center text-xs break-words whitespace-normal">
+                            Our admins & moderators will investigate this
+                            feedback, Thank you.
+                          </p>
                         </form>
                       </div>
                     </div>
@@ -353,7 +467,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                           setOpenReport(true);
                           setpostToReport(item.id);
                         }}
-                        className="text-black px-1 rounded-lg"
+                        className="text-black px-1 rounded-lg animate-fadeIn"
                         style={{ backgroundColor: "#D9D9D9" }}
                       >
                         Report
@@ -362,20 +476,20 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                       ""
                     )}
                     {/* buttons 3dots*/}
-                    <div className="flex items-center justify-center bg-blue-600 rounded-full p-1">
+                    <div className="flex items-center justify-center rounded-full p-1">
                       {openDots[item.id] ? (
                         <div
-                          className="text-2xl text-white animate-fadeIn"
+                          className="text-2xl text-black animate-fadeIn"
                           onClick={() => toggleDotsMenu(item.id)}
                         >
                           <AiOutlineCloseCircle />
                         </div>
                       ) : (
                         <div
-                          className="text-2xl text-white animate-fadeIn"
+                          className="text-2xl text-black animate-fadeIn"
                           onClick={() => toggleDotsMenu(item.id)}
                         >
-                          <IoSettingsOutline />
+                          <LuSettings2 />
                         </div>
                       )}
                     </div>

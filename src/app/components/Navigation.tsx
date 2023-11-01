@@ -20,7 +20,7 @@ function Navigation({ name, setOpen }: NavData) {
 
   return (
     <div className="flex w-full items-center justify-between px-12 py-6 md:px-3">
-      <div className="cursor-default text-3xl font-semibold flex first-letter:capitalize xl:text-4xl md:text-3xl">
+      <div className="cursor-default text-3xl font-semibold flex gap-1 first-letter:capitalize xl:text-4xl md:text-3xl">
         Hello,
         {name ? (
           <p className="first-letter:capitalize lowercase">

@@ -175,11 +175,13 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
 
   return (
     <div
-      className={`w-5/12 h-screen flex items-center justify-start flex-col fixed top-0 right-0 z-40 bg-slate-500 p-4 xl:p-4 lg:w-4/6 lg:p-4 md:w-4/6 sm:w-full ${
+      className={`w-5/12 h-screen flex items-center justify-start flex-col fixed top-0 right-0 z-40 p-4 xl:p-4 lg:w-4/6 lg:p-4 md:w-4/6 sm:w-full ${
         closeForm
           ? "animate-sidebarReverse lg:animate-sidebarReverselg md:animate-sidebarReverselg sm:animate-sidebarReversefull"
           : "animate-sidebar lg:animate-sidebarlg md:animate-sidebarlg sm:animate-sidebarfull"
-      }`}
+      }
+      `}
+      style={{ backgroundColor: "#DBD9D9" }}
     >
       {/* NOTIFICATION  */}
 
@@ -262,7 +264,8 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
                     onCancel();
                   }, 400);
                 }}
-                className="text-2xl bg-red-600 text-white rounded-2xl px-6 lg:text-xl md:text-lg"
+                className="text-2xl text-black font-semibold rounded-2xl px-6 lg:text-xl md:text-lg"
+                style={{ backgroundColor: "#FFB000" }}
               >
                 Cancel
               </button>
@@ -286,11 +289,11 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
               <select
                 onChange={handleChange}
                 value={formData.concern}
-                className="w-1/2 text-2xl outline-none rounded-xl p-2 bg-transparent text-center md:text-xl"
+                className="w-full pr-4 text-2xl outline-none rounded-xl p-2 bg-transparent text-left md:text-xl"
                 name="concern"
                 required
               >
-                <option value="">Please Select</option>
+                <option value=""></option>
                 <option value="facility">Facility</option>
                 <option value="student">Student</option>
                 <option value="professor">Professor</option>
@@ -386,7 +389,8 @@ const Form: React.FC<FormProps> = ({ mode, initialData, onCancel }) => {
               <button
                 type="submit"
                 ref={btnRef}
-                className="text-lg p-2 bg-blue-800 text-white rounded-xl"
+                className="text-lg p-2 text-black rounded-xl font-semibold"
+                style={{ backgroundColor: "#3085C3" }}
               >
                 {mode === "edit" ? "Save Post" : "Add Post"}
               </button>
