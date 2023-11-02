@@ -77,11 +77,14 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
   //report notif
   const [reportNotif, setReportNotif] = useState<string>("");
 
+  //delete loading
+  const [loadDelete, setLoadDelete] = useState<boolean>(false);
+
   const DeletePost = async (postId: string) => {
     if (deleteRef.current) {
       deleteRef.current.disabled = true;
     }
-
+    setLoadDelete(true);
     try {
       console.log("delete clicked ");
       const response = await axios.post("/api/post/delete", { postId: postId });
@@ -90,9 +93,11 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
       if (data.success) {
         setDeleteFailed(false);
         setOverlayDelete(false);
+        setLoadDelete(false);
       } else if (data.success === false) {
         setDeleteFailed(true);
         setOverlayDelete(false);
+        setLoadDelete(false);
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -367,13 +372,23 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                   {openDelete && (
                     <div className="bg-slate-500/10 z-50 h-full w-full flex items-center justify-center fixed top-0 left-0 animate-fadeIn cursor-default overflow-hidden">
                       <div className="flex flex-col items-center bg-white p-4 rounded-xl gap-6 md:p-2 md:gap-3">
+                        {loadDelete && (
+                          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-400/70 text-blue-800">
+                            <div className="text-7xl animate-spin">
+                              <VscLoading />
+                            </div>
+                          </div>
+                        )}
                         <div className="text-xl font-bold flex w-full items-center justify-center md:font-semibold md:text-lg">
                           Are you sure you want to delete the post?
                         </div>
 
                         <div className="flex w-full items-center justify-center gap-5 md:gap-3">
                           <button
-                            onClick={() => DeletePost(postToDelete)}
+                            onClick={() => {
+                              DeletePost(postToDelete);
+                              setLoadDelete(true);
+                            }}
                             className="text-black p-1 font-semibold rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
                             style={{ backgroundColor: "#D9D9D9" }}
                           >
@@ -383,6 +398,7 @@ function DisplayForms({ currentUserId, onCancel }: DisplayForm) {
                             onClick={() => {
                               setOpenDelete(false);
                               setOverlayDelete(false);
+                              setLoadDelete(false);
                             }}
                             className="bg-red-700 font-semibold text-white p-1 rounded-lg text-lg w-20 hover:shadow-xl md:text-base"
                           >
